@@ -1,0 +1,6 @@
+/* Stub — estilos da sequência de animação do tema Pequeno Príncipe (ADR 0009).
+   Conteúdo real a implementar. */
+
+#animacao-pequeno-principe .cena {
+  display: none;
+}
