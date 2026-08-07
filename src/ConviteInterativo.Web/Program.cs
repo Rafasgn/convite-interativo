@@ -1,3 +1,6 @@
+using ConviteInterativo.Web.Data;
+using ConviteInterativo.Web.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using QuestPDF.Infrastructure;
 
@@ -8,6 +11,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
+
+builder.Services.AddSingleton<TokenGenerator>();
 
 var app = builder.Build();
 
