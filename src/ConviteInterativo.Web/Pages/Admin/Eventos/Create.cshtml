@@ -1,0 +1,12 @@
+@page
+@model ConviteInterativo.Web.Pages.Admin.Eventos.CreateModel
+@{
+    ViewData["Title"] = "Novo Evento";
+}
+
+<h2>Novo Evento</h2>
+
+<form method="post">
+    <partial name="_EventoForm" model="Model.Input" />
+    <button type="submit" class="btn">Criar</button>
+</form>

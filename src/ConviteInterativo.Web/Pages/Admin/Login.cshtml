@@ -1,0 +1,21 @@
+@page
+@model ConviteInterativo.Web.Pages.Admin.LoginModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h2>Login</h2>
+
+@if (Model.Erro is not null)
+{
+    <p class="field-validation-error">@Model.Erro</p>
+}
+
+<form method="post">
+    <input type="hidden" asp-for="ReturnUrl" />
+
+    <label asp-for="Senha">Senha</label>
+    <input type="password" asp-for="Senha" autocomplete="current-password" autofocus />
+
+    <button type="submit" class="btn">Entrar</button>
+</form>

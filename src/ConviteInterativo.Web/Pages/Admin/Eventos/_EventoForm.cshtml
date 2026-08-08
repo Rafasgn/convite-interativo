@@ -1,0 +1,30 @@
+@model ConviteInterativo.Web.Pages.Admin.Eventos.EventoInputModel
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+<div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+
+<label asp-for="Nome">Nome</label>
+<input asp-for="Nome" />
+<span asp-validation-for="Nome" class="field-validation-error"></span>
+
+<label asp-for="Slug">Slug</label>
+<input asp-for="Slug" placeholder="identificador na URL, ex.: zayan-1-ano" />
+<span asp-validation-for="Slug" class="field-validation-error"></span>
+
+<label asp-for="DataHora">Data/Hora</label>
+<input asp-for="DataHora" type="datetime-local" />
+<span asp-validation-for="DataHora" class="field-validation-error"></span>
+
+<label asp-for="Endereco">Endereço</label>
+<input asp-for="Endereco" />
+<span asp-validation-for="Endereco" class="field-validation-error"></span>
+
+<label asp-for="LinkMapa">Link do mapa (opcional)</label>
+<input asp-for="LinkMapa" />
+<span asp-validation-for="LinkMapa" class="field-validation-error"></span>
+
+<label asp-for="TemaSlug">Tema</label>
+<select asp-for="TemaSlug" asp-items="@(new SelectList(EventoInputModel.TemasDisponiveis))">
+    <option value="">Selecione...</option>
+</select>
+<span asp-validation-for="TemaSlug" class="field-validation-error"></span>

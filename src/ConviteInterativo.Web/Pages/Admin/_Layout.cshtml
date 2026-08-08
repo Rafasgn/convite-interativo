@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Convite Interativo — Admin</title>
+    <link rel="stylesheet" href="~/css/admin.css" />
+</head>
+<body>
+    <header class="admin-header">
+        <h1>Convite Interativo — Admin</h1>
+        <nav>
+            <a asp-page="/Admin/Eventos/Index">Eventos</a>
+            <a asp-page="/Admin/Logout">Sair</a>
+        </nav>
+    </header>
+    <main class="admin-main">
+        @RenderBody()
+    </main>
+</body>
+</html>

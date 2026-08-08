@@ -34,3 +34,5 @@ Precisa de um Dockerfile na solution quando a implementação começar.
 A pasta data/ deve ser criada em runtime se não existir, e deve estar no .gitignore.
 
 A configuração de deploy (Railway ou Fly.io) precisa declarar explicitamente o volume persistente apontando para essa pasta, isso entra na checklist de deploy.
+
+Nota (2026-08-07): o path original data/ foi renomeado pra db/ — ver ADR 0015 pra motivo (colisão com pasta Data/ do EF em filesystems case-insensitive).

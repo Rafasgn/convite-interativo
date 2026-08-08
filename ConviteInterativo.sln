@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConviteInterativo.Web", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConviteInterativo.Tests", "src\ConviteInterativo.Tests\ConviteInterativo.Tests.csproj", "{7E52D775-E3A8-454C-985F-ACB96C6503CD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{07C2787E-EAC7-C090-1BA3-A61EC2A24D84}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HashGen", "tools\HashGen\HashGen.csproj", "{CC3F4EDE-1B1C-4C94-99E5-AD62933E1468}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +47,18 @@ Global
 		{7E52D775-E3A8-454C-985F-ACB96C6503CD}.Release|x64.Build.0 = Release|Any CPU
 		{7E52D775-E3A8-454C-985F-ACB96C6503CD}.Release|x86.ActiveCfg = Release|Any CPU
 		{7E52D775-E3A8-454C-985F-ACB96C6503CD}.Release|x86.Build.0 = Release|Any CPU
+		{CC3F4EDE-1B1C-4C94-99E5-AD62933E1468}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC3F4EDE-1B1C-4C94-99E5-AD62933E1468}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC3F4EDE-1B1C-4C94-99E5-AD62933E1468}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CC3F4EDE-1B1C-4C94-99E5-AD62933E1468}.Debug|x64.Build.0 = Debug|Any CPU
+		{CC3F4EDE-1B1C-4C94-99E5-AD62933E1468}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CC3F4EDE-1B1C-4C94-99E5-AD62933E1468}.Debug|x86.Build.0 = Debug|Any CPU
+		{CC3F4EDE-1B1C-4C94-99E5-AD62933E1468}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC3F4EDE-1B1C-4C94-99E5-AD62933E1468}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC3F4EDE-1B1C-4C94-99E5-AD62933E1468}.Release|x64.ActiveCfg = Release|Any CPU
+		{CC3F4EDE-1B1C-4C94-99E5-AD62933E1468}.Release|x64.Build.0 = Release|Any CPU
+		{CC3F4EDE-1B1C-4C94-99E5-AD62933E1468}.Release|x86.ActiveCfg = Release|Any CPU
+		{CC3F4EDE-1B1C-4C94-99E5-AD62933E1468}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,5 +66,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{575534B1-6B2C-4578-B621-18F12818CD5E} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{7E52D775-E3A8-454C-985F-ACB96C6503CD} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{CC3F4EDE-1B1C-4C94-99E5-AD62933E1468} = {07C2787E-EAC7-C090-1BA3-A61EC2A24D84}
 	EndGlobalSection
 EndGlobal

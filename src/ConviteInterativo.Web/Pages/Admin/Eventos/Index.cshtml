@@ -1,0 +1,41 @@
+@page
+@model ConviteInterativo.Web.Pages.Admin.Eventos.IndexModel
+@{
+    ViewData["Title"] = "Eventos";
+}
+
+<h2>Eventos</h2>
+
+<p><a asp-page="Create" class="btn">Novo Evento</a></p>
+
+@if (Model.Eventos.Count == 0)
+{
+    <p>Nenhum evento cadastrado ainda.</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Slug</th>
+                <th>Data/Hora</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var evento in Model.Eventos)
+            {
+                <tr>
+                    <td>@evento.Nome</td>
+                    <td>@evento.Slug</td>
+                    <td>@evento.DataHora.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>
+                        <a asp-page="Edit" asp-route-id="@evento.Id">Editar</a>
+                        <a asp-page="Delete" asp-route-id="@evento.Id">Excluir</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

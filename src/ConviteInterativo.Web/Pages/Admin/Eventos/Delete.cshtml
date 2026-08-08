@@ -1,0 +1,15 @@
+@page "{id:int}"
+@model ConviteInterativo.Web.Pages.Admin.Eventos.DeleteModel
+@{
+    ViewData["Title"] = "Excluir Evento";
+}
+
+<h2>Excluir Evento</h2>
+
+<p>Tem certeza que deseja excluir o evento <strong>@Model.Evento?.Nome</strong>?</p>
+<p>Todos os convites vinculados serão excluídos junto.</p>
+
+<form method="post">
+    <button type="submit" class="btn">Excluir</button>
+    <a asp-page="Index">Cancelar</a>
+</form>
