@@ -74,3 +74,18 @@ form input, form select {
     border: none;
     cursor: pointer;
 }
+
+.btn:disabled {
+    background: #999;
+    cursor: not-allowed;
+}
+
+.breadcrumb {
+    margin-bottom: 1rem;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.breadcrumb a {
+    color: #20232a;
+}

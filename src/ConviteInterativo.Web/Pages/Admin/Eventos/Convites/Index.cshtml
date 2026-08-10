@@ -1,0 +1,55 @@
+@page "/Admin/Eventos/{eventoId:int}/Convites"
+@model ConviteInterativo.Web.Pages.Admin.Eventos.Convites.IndexModel
+@{
+    ViewData["Title"] = "Convites";
+}
+
+<nav class="breadcrumb">
+    <a asp-page="/Admin/Eventos/Index">Eventos</a> › @Model.Evento.Nome › Convites
+</nav>
+
+<h2>Convites — @Model.Evento.Nome</h2>
+
+<p><a asp-page="Create" asp-route-eventoId="@Model.Evento.Id" class="btn">Novo convite</a></p>
+
+@if (Model.Convites.Count == 0)
+{
+    <p>Nenhum convite cadastrado ainda.</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Nome do grupo</th>
+                <th>Nº de integrantes</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var convite in Model.Convites)
+            {
+                var link = $"{Request.Scheme}://{Request.Host}/c/{convite.Token}";
+                <tr>
+                    <td>@convite.Nome</td>
+                    <td>@convite.IntegrantesCount</td>
+                    <td>
+                        @if (convite.IntegrantesCount == 0)
+                        {
+                            <button type="button" class="btn" disabled title="Adicione integrantes antes">Copiar link</button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-copy" data-link="@link">Copiar link</button>
+                        }
+                        <a asp-page="Edit" asp-route-eventoId="@Model.Evento.Id" asp-route-id="@convite.Id">Editar</a>
+                        <a asp-page="Details" asp-route-eventoId="@Model.Evento.Id" asp-route-id="@convite.Id">Detalhes</a>
+                        <a asp-page="Delete" asp-route-eventoId="@Model.Evento.Id" asp-route-id="@convite.Id">Excluir</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<script src="~/js/copy-link.js"></script>

@@ -1,0 +1,19 @@
+@page "/Admin/Eventos/{eventoId:int}/Convites/Create"
+@model ConviteInterativo.Web.Pages.Admin.Eventos.Convites.CreateModel
+@{
+    ViewData["Title"] = "Novo Convite";
+}
+
+<nav class="breadcrumb">
+    <a asp-page="/Admin/Eventos/Index">Eventos</a> ›
+    @Model.Evento.Nome ›
+    <a asp-page="Index" asp-route-eventoId="@Model.Evento.Id">Convites</a> ›
+    Novo
+</nav>
+
+<h2>Novo Convite — @Model.Evento.Nome</h2>
+
+<form method="post">
+    <partial name="_ConviteForm" model="Model.Input" />
+    <button type="submit" class="btn">Criar</button>
+</form>

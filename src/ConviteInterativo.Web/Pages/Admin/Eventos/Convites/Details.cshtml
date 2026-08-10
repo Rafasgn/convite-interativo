@@ -1,0 +1,44 @@
+@page "/Admin/Eventos/{eventoId:int}/Convites/{id:int}/Details"
+@model ConviteInterativo.Web.Pages.Admin.Eventos.Convites.DetailsModel
+@{
+    ViewData["Title"] = "Detalhes do Convite";
+}
+
+<nav class="breadcrumb">
+    <a asp-page="/Admin/Eventos/Index">Eventos</a> ›
+    @Model.Evento.Nome ›
+    <a asp-page="Index" asp-route-eventoId="@Model.Evento.Id">Convites</a> ›
+    @Model.Convite.Nome
+</nav>
+
+<h2>@Model.Convite.Nome</h2>
+
+<section>
+    <h3>Integrantes</h3>
+    <p>@Model.IntegrantesCount integrante(s) cadastrado(s).</p>
+    <p><em>Cadastro de integrantes será implementado na próxima HU.</em></p>
+</section>
+
+<section>
+    <h3>Link do convite</h3>
+    @if (Model.IntegrantesCount == 0)
+    {
+        <button type="button" class="btn" disabled>Gerar link</button>
+        <p>Adicione integrantes ao grupo antes de gerar o link.</p>
+    }
+    else
+    {
+        <button type="button" class="btn js-toggle-link" data-target="link-block">Gerar link</button>
+        <div id="link-block" hidden>
+            <code id="link-url">@Model.LinkPublico</code>
+            <button type="button" class="btn btn-copy" data-link-target="link-url">Copiar</button>
+        </div>
+    }
+</section>
+
+<p>
+    <a asp-page="Index" asp-route-eventoId="@Model.Evento.Id" class="btn">Voltar</a>
+    <a asp-page="Edit" asp-route-eventoId="@Model.Evento.Id" asp-route-id="@Model.Convite.Id" class="btn">Editar</a>
+</p>
+
+<script src="~/js/copy-link.js"></script>

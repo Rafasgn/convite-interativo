@@ -1,0 +1,22 @@
+@page "/Admin/Eventos/{eventoId:int}/Convites/{id:int}/Delete"
+@model ConviteInterativo.Web.Pages.Admin.Eventos.Convites.DeleteModel
+@{
+    ViewData["Title"] = "Excluir Convite";
+}
+
+<nav class="breadcrumb">
+    <a asp-page="/Admin/Eventos/Index">Eventos</a> ›
+    @Model.Evento.Nome ›
+    <a asp-page="Index" asp-route-eventoId="@Model.Evento.Id">Convites</a> ›
+    Excluir
+</nav>
+
+<h2>Excluir Convite</h2>
+
+<p>Tem certeza que deseja excluir o convite <strong>@Model.Convite.Nome</strong>?</p>
+<p>Este convite tem @Model.IntegrantesCount integrante(s) que serão apagados junto.</p>
+
+<form method="post">
+    <button type="submit" class="btn">Confirmar exclusão</button>
+    <a asp-page="Index" asp-route-eventoId="@Model.Evento.Id">Cancelar</a>
+</form>

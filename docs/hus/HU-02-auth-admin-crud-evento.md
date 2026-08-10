@@ -1,6 +1,6 @@
 # HU-02 — Autenticação admin e CRUD de Evento
 
-**Status:** Aprovada
+**Status:** Concluída
 
 ## Objetivo
 
