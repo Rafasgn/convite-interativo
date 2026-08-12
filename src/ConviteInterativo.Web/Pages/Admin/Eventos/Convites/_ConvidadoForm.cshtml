@@ -1,0 +1,9 @@
+@model ConviteInterativo.Web.Pages.Admin.Eventos.Convites.ConvidadoInputModel
+
+<label asp-for="Nome">Nome</label>
+<input asp-for="Nome" placeholder="ex.: Ana" />
+<span asp-validation-for="Nome" class="field-validation-error"></span>
+
+<label asp-for="Sobrenome">Sobrenome (opcional)</label>
+<input asp-for="Sobrenome" placeholder="ex.: Carolina" />
+<span asp-validation-for="Sobrenome" class="field-validation-error"></span>

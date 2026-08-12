@@ -24,6 +24,13 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         {
             builder.HasIndex(c => c.Token).IsUnique();
 
+            // HasDefaultValue exige o tipo CLR da propriedade (o enum), não a string
+            // convertida — EF Core aplica o HasConversion ao valor default sozinho na
+            // hora de gerar o SQL/migration (verificado: sai como defaultValue: "Grupo").
+            builder.Property(c => c.ModoConfirmacao)
+                .HasConversion<string>()
+                .HasDefaultValue(ModoConfirmacao.Grupo);
+
             builder.HasMany(c => c.Convidados)
                 .WithOne(g => g.Convite)
                 .HasForeignKey(g => g.ConviteId)

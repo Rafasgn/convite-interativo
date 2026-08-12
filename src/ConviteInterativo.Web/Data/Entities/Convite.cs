@@ -7,6 +7,7 @@ public class Convite
     public Evento? Evento { get; set; }
     public required string Nome { get; set; }
     public required string Token { get; set; }
+    public ModoConfirmacao ModoConfirmacao { get; set; } = ModoConfirmacao.Grupo;
     public DateTime DataCriacao { get; set; }
     public DateTime DataAtualizacao { get; set; }
 

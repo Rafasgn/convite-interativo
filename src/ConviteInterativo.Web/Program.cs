@@ -26,6 +26,9 @@ builder.Services.AddSingleton<TokenGenerator>();
 // Scoped porque depende do AppDbContext (também scoped) — HU-03.
 builder.Services.AddScoped<ConviteService>();
 
+// Scoped porque depende do AppDbContext (também scoped) — HU-04.
+builder.Services.AddScoped<ConvidadoService>();
+
 builder.Services.AddMemoryCache();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

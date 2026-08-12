@@ -95,4 +95,24 @@ public class ConviteServiceTests : IDisposable
 
         Assert.False(string.IsNullOrWhiteSpace(convite.Token));
     }
+
+    [Fact]
+    public async Task CriarAsync_SemModoEspecificado_UsaGrupoComoDefault()
+    {
+        var evento = await CriarEventoAsync("evento-6");
+
+        var convite = await _service.CriarAsync(evento.Id, "Família Silva");
+
+        Assert.Equal(ModoConfirmacao.Grupo, convite.ModoConfirmacao);
+    }
+
+    [Fact]
+    public async Task CriarAsync_ComModoIndividual_PersisteModoCorreto()
+    {
+        var evento = await CriarEventoAsync("evento-7");
+
+        var convite = await _service.CriarAsync(evento.Id, "Família Silva", ModoConfirmacao.Individual);
+
+        Assert.Equal(ModoConfirmacao.Individual, convite.ModoConfirmacao);
+    }
 }

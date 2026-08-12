@@ -15,13 +15,59 @@
 
 <section>
     <h3>Integrantes</h3>
-    <p>@Model.IntegrantesCount integrante(s) cadastrado(s).</p>
-    <p><em>Cadastro de integrantes será implementado na próxima HU.</em></p>
+
+    @if (Model.ErroConvidado is not null)
+    {
+        <p class="field-validation-error">@Model.ErroConvidado</p>
+    }
+
+    @if (Model.Convidados.Count == 0)
+    {
+        <p>Nenhum integrante cadastrado ainda.</p>
+    }
+    else
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th>Integrante</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var convidado in Model.Convidados)
+                {
+                    <tr>
+                        <td>
+                            <form method="post" asp-page-handler="Editar" class="inline-form">
+                                <input type="hidden" name="convidadoId" value="@convidado.Id" />
+                                <input type="text" name="nome" value="@convidado.Nome" placeholder="Nome" />
+                                <input type="text" name="sobrenome" value="@convidado.Sobrenome" placeholder="Sobrenome" />
+                                <button type="submit" class="btn">Salvar</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form method="post" asp-page-handler="Remover" class="inline-form">
+                                <input type="hidden" name="convidadoId" value="@convidado.Id" />
+                                <button type="submit" class="btn">Remover</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    <h4>Adicionar integrante</h4>
+    <form method="post" asp-page-handler="Adicionar">
+        <partial name="_ConvidadoForm" model="Model.NovoConvidado" />
+        <button type="submit" class="btn">Adicionar</button>
+    </form>
 </section>
 
 <section>
     <h3>Link do convite</h3>
-    @if (Model.IntegrantesCount == 0)
+    @if (Model.Convidados.Count == 0)
     {
         <button type="button" class="btn" disabled>Gerar link</button>
         <p>Adicione integrantes ao grupo antes de gerar o link.</p>

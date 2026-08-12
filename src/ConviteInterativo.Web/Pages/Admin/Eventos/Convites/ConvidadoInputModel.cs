@@ -1,13 +1,13 @@
 using System.ComponentModel.DataAnnotations;
-using ConviteInterativo.Web.Data.Entities;
 
 namespace ConviteInterativo.Web.Pages.Admin.Eventos.Convites;
 
-public class ConviteInputModel
+public class ConvidadoInputModel
 {
-    [Required(ErrorMessage = "Informe o nome do grupo.")]
+    [Required(ErrorMessage = "Informe o nome do integrante.")]
     [StringLength(200, ErrorMessage = "Nome muito longo (máx. 200 caracteres).")]
     public string Nome { get; set; } = string.Empty;
 
-    public ModoConfirmacao ModoConfirmacao { get; set; } = ModoConfirmacao.Grupo;
+    [StringLength(200, ErrorMessage = "Sobrenome muito longo (máx. 200 caracteres).")]
+    public string? Sobrenome { get; set; }
 }

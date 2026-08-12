@@ -14,7 +14,7 @@ public class ConviteService(AppDbContext db, TokenGenerator tokenGenerator)
             (ignorarConviteId == null || c.Id != ignorarConviteId));
     }
 
-    public async Task<Convite> CriarAsync(int eventoId, string nome)
+    public async Task<Convite> CriarAsync(int eventoId, string nome, ModoConfirmacao modoConfirmacao = ModoConfirmacao.Grupo)
     {
         var agora = DateTime.UtcNow;
         var convite = new Convite
@@ -22,6 +22,7 @@ public class ConviteService(AppDbContext db, TokenGenerator tokenGenerator)
             EventoId = eventoId,
             Nome = nome,
             Token = tokenGenerator.GerarToken(),
+            ModoConfirmacao = modoConfirmacao,
             DataCriacao = agora,
             DataAtualizacao = agora,
         };

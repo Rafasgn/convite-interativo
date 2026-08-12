@@ -28,7 +28,7 @@ public class EditModel(AppDbContext db, ConviteService conviteService) : PageMod
         }
 
         Evento = evento;
-        Input = new ConviteInputModel { Nome = convite.Nome };
+        Input = new ConviteInputModel { Nome = convite.Nome, ModoConfirmacao = convite.ModoConfirmacao };
 
         return Page();
     }
@@ -61,6 +61,7 @@ public class EditModel(AppDbContext db, ConviteService conviteService) : PageMod
         }
 
         convite.Nome = Input.Nome;
+        convite.ModoConfirmacao = Input.ModoConfirmacao;
         convite.DataAtualizacao = DateTime.UtcNow;
         await db.SaveChangesAsync();
 

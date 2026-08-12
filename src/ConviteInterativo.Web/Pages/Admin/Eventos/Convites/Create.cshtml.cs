@@ -46,7 +46,7 @@ public class CreateModel(AppDbContext db, ConviteService conviteService) : PageM
             return Page();
         }
 
-        var convite = await conviteService.CriarAsync(eventoId, Input.Nome);
+        var convite = await conviteService.CriarAsync(eventoId, Input.Nome, Input.ModoConfirmacao);
 
         return RedirectToPage("Details", new { eventoId, id = convite.Id });
     }
