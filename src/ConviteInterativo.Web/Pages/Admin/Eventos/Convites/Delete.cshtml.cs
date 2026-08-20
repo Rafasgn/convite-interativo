@@ -9,7 +9,7 @@ namespace ConviteInterativo.Web.Pages.Admin.Eventos.Convites;
 public class DeleteModel(AppDbContext db) : PageModel
 {
     public Evento Evento { get; set; } = null!;
-    public Convite Convite { get; set; } = null!;
+    public Data.Entities.Convite Convite { get; set; } = null!;
     public int IntegrantesCount { get; set; }
 
     public async Task<IActionResult> OnGetAsync(int eventoId, int id)

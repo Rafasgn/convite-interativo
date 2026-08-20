@@ -1,0 +1,60 @@
+@page "/c/{token}"
+@model ConviteInterativo.Web.Pages.Convite.IndexModel
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@Model.Evento.Nome</title>
+    <link rel="stylesheet" href="~/css/publico.css" />
+</head>
+<body>
+    <main class="convite-main">
+        <h1>@Model.Evento.Nome</h1>
+
+        <section class="evento-dados">
+            <p><strong>Quando:</strong> @Model.Evento.DataHora.ToString("dd/MM/yyyy HH:mm")</p>
+            <p><strong>Onde:</strong> @Model.Evento.Endereco</p>
+            <p><a href="@Model.LinkMapaResolvido" target="_blank" rel="noopener">Como chegar</a></p>
+        </section>
+
+        <section class="convidados">
+            <h2>Convidados — @Model.Convite.Nome</h2>
+
+            <ul class="lista-convidados">
+                @foreach (var convidado in Model.Convidados)
+                {
+                    <li>
+                        <span class="nome">@ConviteInterativo.Web.Pages.Convite.IndexModel.NomeExibicao(convidado, Model.Convite.Nome)</span>
+                        <span class="status">@ConviteInterativo.Web.Pages.Convite.IndexModel.StatusExibicao(convidado.Status)</span>
+
+                        @if (Model.Convite.ModoConfirmacao == ConviteInterativo.Web.Data.Entities.ModoConfirmacao.Individual)
+                        {
+                            <form method="post" asp-page-handler="ConfirmarIndividual" class="inline-form">
+                                <input type="hidden" name="convidadoId" value="@convidado.Id" />
+                                <button type="submit" class="btn">Confirmar</button>
+                            </form>
+                            <form method="post" asp-page-handler="RecusarIndividual" class="inline-form">
+                                <input type="hidden" name="convidadoId" value="@convidado.Id" />
+                                <button type="submit" class="btn btn-secundario">Não vou</button>
+                            </form>
+                        }
+                    </li>
+                }
+            </ul>
+
+            @if (Model.Convite.ModoConfirmacao == ConviteInterativo.Web.Data.Entities.ModoConfirmacao.Grupo)
+            {
+                <div class="acoes-grupo">
+                    <form method="post" asp-page-handler="ConfirmarGrupo">
+                        <button type="submit" class="btn">Confirmar presença</button>
+                    </form>
+                    <form method="post" asp-page-handler="RecusarGrupo">
+                        <button type="submit" class="btn btn-secundario">Não vou</button>
+                    </form>
+                </div>
+            }
+        </section>
+    </main>
+</body>
+</html>

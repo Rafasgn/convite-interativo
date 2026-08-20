@@ -29,6 +29,9 @@ builder.Services.AddScoped<ConviteService>();
 // Scoped porque depende do AppDbContext (também scoped) — HU-04.
 builder.Services.AddScoped<ConvidadoService>();
 
+// Scoped porque depende do AppDbContext (também scoped) — HU-05a.
+builder.Services.AddScoped<ConvitePublicoService>();
+
 builder.Services.AddMemoryCache();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

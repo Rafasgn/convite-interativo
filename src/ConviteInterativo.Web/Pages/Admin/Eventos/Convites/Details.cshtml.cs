@@ -9,7 +9,7 @@ namespace ConviteInterativo.Web.Pages.Admin.Eventos.Convites;
 public class DetailsModel(AppDbContext db, ConvidadoService convidadoService) : PageModel
 {
     public Evento Evento { get; set; } = null!;
-    public Convite Convite { get; set; } = null!;
+    public Data.Entities.Convite Convite { get; set; } = null!;
     public List<Convidado> Convidados { get; set; } = [];
 
     [BindProperty]

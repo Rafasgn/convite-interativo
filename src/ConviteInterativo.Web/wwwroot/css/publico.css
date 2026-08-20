@@ -1,0 +1,62 @@
+body {
+    font-family: system-ui, sans-serif;
+    margin: 0;
+    color: #1a1a1a;
+    background: #f5f5f5;
+}
+
+.convite-main {
+    max-width: 640px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+}
+
+.evento-dados p {
+    margin: 0.5rem 0;
+}
+
+.lista-convidados {
+    list-style: none;
+    padding: 0;
+}
+
+.lista-convidados li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.lista-convidados .status {
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.inline-form {
+    display: inline-flex;
+    margin: 0;
+}
+
+.acoes-grupo {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+.acoes-grupo form {
+    margin: 0;
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: #20232a;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-secundario {
+    background: #999;
+}
