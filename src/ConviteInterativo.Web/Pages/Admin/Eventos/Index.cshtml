@@ -20,6 +20,7 @@ else
                 <th>Nome</th>
                 <th>Slug</th>
                 <th>Data/Hora</th>
+                <th>Convites</th>
                 <th></th>
             </tr>
         </thead>
@@ -30,6 +31,9 @@ else
                     <td>@evento.Nome</td>
                     <td>@evento.Slug</td>
                     <td>@evento.DataHora.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>
+                        <a asp-page="./Convites/Index" asp-route-eventoId="@evento.Id">Ver convites</a>
+                    </td>
                     <td>
                         <a asp-page="Edit" asp-route-id="@evento.Id">Editar</a>
                         <a asp-page="Delete" asp-route-id="@evento.Id">Excluir</a>

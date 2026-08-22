@@ -1,6 +1,404 @@
-/* Stub — estilos da sequência de animação do tema Pequeno Príncipe (ADR 0009).
-   Conteúdo real a implementar. */
+/*
+  Tema Pequeno Príncipe — HU-05b.
+  Fases da timeline (ver doc HU-05b/09) são classes cumulativas adicionadas em #cena
+  por animacao.js: fase-fundo, fase-nuvens, fase-lua, fase-principe,
+  fase-estrela-cadente, fase-pergaminho, fase-digitando, fase-dados,
+  fase-confirmacao. Cada seletor abaixo reage à fase correspondente.
+*/
+body {
+  margin: 0;
+  background: #0b1026;
+  min-height: 100vh;
+}
 
-#animacao-pequeno-principe .cena {
-  display: none;
+.pp-cena {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  aspect-ratio: 9 / 16;
+  margin: 0 auto;
+  overflow: hidden;
+  background: #0b1026;
+}
+
+@media (min-width: 768px) {
+  .pp-cena {
+    margin-top: 2rem;
+    border-radius: 12px;
+  }
+}
+
+.sprite {
+  position: absolute;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+/* ===== z-index 0 — fundo estrelado ===== */
+.pp-fundo-estrelado {
+  z-index: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 1.5s ease;
+}
+
+.pp-cena.fase-fundo .pp-fundo-estrelado {
+  opacity: 1;
+}
+
+/* ===== z-index 10 — nuvens ===== */
+.pp-nuvens {
+  z-index: 10;
+  top: 8%;
+  left: 0;
+  width: 70%;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+.pp-cena.fase-nuvens .pp-nuvens {
+  opacity: 0.9;
+  animation: pp-flutuar 9s ease-in-out infinite;
+}
+
+@keyframes pp-flutuar {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(4%); }
+}
+
+/* ===== z-index 15 — halo estrelado ===== */
+.pp-halo {
+  z-index: 15;
+  top: 20%;
+  left: 20%;
+  width: 60%;
+  opacity: 0;
+  transition: opacity 1.8s ease;
+}
+
+.pp-cena.fase-nuvens .pp-halo {
+  opacity: 0.6;
+}
+
+/* ===== z-index 20 — lua ===== */
+.pp-lua {
+  z-index: 20;
+  top: 6%;
+  right: 8%;
+  width: 18%;
+  opacity: 0;
+  transform: translate(40px, -30px);
+  transition: opacity 1.2s ease, transform 1.2s ease;
+}
+
+.pp-cena.fase-lua .pp-lua {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+/* ===== z-index 25 — estrela cadente (one-shot) ===== */
+.pp-estrela-cadente {
+  z-index: 25;
+  top: 12%;
+  left: -15%;
+  width: 22%;
+  opacity: 0;
+}
+
+.pp-cena.fase-estrela-cadente .pp-estrela-cadente {
+  animation: pp-cruzar-tela 1s ease-in forwards;
+}
+
+@keyframes pp-cruzar-tela {
+  0% { opacity: 1; transform: translate(0, 0); }
+  100% { opacity: 0; transform: translate(140%, 55%); }
+}
+
+/* ===== z-index 30 — asteroide + príncipe ===== */
+.pp-asteroide-grupo {
+  position: absolute;
+  z-index: 30;
+  bottom: 8%;
+  left: 50%;
+  width: 55%;
+  transform: translate(-50%, 60px);
+  opacity: 0;
+  transition: opacity 1.5s ease, transform 1.5s ease;
+}
+
+.pp-cena.fase-principe .pp-asteroide-grupo {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.pp-asteroide-grupo .pp-asteroide {
+  position: relative;
+  width: 100%;
+}
+
+.pp-asteroide-grupo .pp-principe {
+  position: absolute;
+  width: 55%;
+  top: -35%;
+  left: 22%;
+}
+
+/* ===== z-index 50 — pergaminho ===== */
+.pp-pergaminho-grupo {
+  position: absolute;
+  z-index: 50;
+  top: 50%;
+  left: 50%;
+  width: 82%;
+  transform: translate(-50%, -50%) scale(0.7);
+  opacity: 0;
+  transition: opacity 1s ease, transform 1s ease;
+}
+
+.pp-cena.fase-pergaminho .pp-pergaminho-grupo {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.pp-pergaminho-img {
+  position: relative;
+  width: 100%;
+  display: block;
+}
+
+/* Personagens sobrepostos ao pergaminho */
+.pp-principe-perg,
+.pp-raposa-perg {
+  position: absolute;
+  bottom: -8%;
+  width: 28%;
+  opacity: 0;
+  transform-origin: bottom center;
+  transition: opacity 1.2s ease-out, transform 1.2s ease-out;
+}
+
+.pp-principe-perg {
+  left: -6%;
+  transform: translateX(-30px);
+}
+
+.pp-raposa-perg {
+  right: -6%;
+  transform: translateX(30px);
+}
+
+.pp-cena.fase-pergaminho .pp-principe-perg,
+.pp-cena.fase-pergaminho .pp-raposa-perg {
+  opacity: 1;
+  transform: translateX(0);
+  animation: pp-respirar 3.5s ease-in-out infinite;
+  animation-delay: 1.5s;
+}
+
+@keyframes pp-respirar {
+  0%, 100% { transform: translateX(0) scale(1); }
+  50%      { transform: translateX(0) scale(1.015); }
+}
+
+/* ===== z-index 55 — texto sobre o pergaminho ===== */
+.pp-pergaminho-conteudo {
+  position: absolute;
+  inset: 18% 14% 12% 14%;
+  z-index: 55;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #4a2f18; /* contraste WCAG AA sobre o bege do pergaminho */
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+.pp-frase-convite {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  color: #4a2f18;
+  text-align: center;
+  margin: 0 0 0.5rem;
+  font-size: 0.95rem;
+}
+
+.pp-nomes {
+  font-size: 0.95rem;
+  font-weight: 600;
+  min-height: 1.4em;
+  margin: 0 0 0.75rem;
+}
+
+.pp-cena.fase-digitando .pp-nomes::after {
+  content: '|';
+  animation: pp-piscar 0.8s step-end infinite;
+}
+
+@keyframes pp-piscar {
+  50% { opacity: 0; }
+}
+
+/* ===== z-index 60 — dados do evento + ícones ===== */
+.pp-dados-evento {
+  z-index: 60;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  font-size: 0.85rem;
+}
+
+.pp-cena.fase-dados .pp-dados-evento {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.pp-dado {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.25rem 0;
+}
+
+.pp-dado a {
+  color: #4a2f18;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Sprite sheet 32_icones.png — background-position placeholder.
+   TODO: calibrar coordenadas dos ícones do sprite sheet. */
+.pp-icone {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  vertical-align: middle;
+}
+
+.pp-icone-calendario {
+  background-image: url('/assets/miniaturas_separadas/38_icone_ calendar.png');
+}
+
+.pp-icone-local {
+  background-image: url('/assets/miniaturas_separadas/40_icone_ pin.png');
+}
+
+.pp-icone-mapa {
+  background-image: url('/assets/miniaturas_separadas/39_icone_ hora.png');
+}
+
+/* ===== z-index 70 — confirmação (forms herdados da HU-05a) ===== */
+.pp-confirmacao {
+  z-index: 70;
+  margin-top: 0.5rem;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  pointer-events: none;
+}
+
+.pp-confirmacao form {
+  margin: 0;
+}
+
+.pp-cena.fase-confirmacao .pp-confirmacao {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.pp-confirmacao .btn {
+  display: inline-block;
+  width: 220px;
+  max-width: 90%;
+  aspect-ratio: 3.5 / 1;
+  padding: 0;
+  margin: 0 0.25rem;
+  border: none;
+  background-color: transparent;
+  background-image: url('/assets/miniaturas_separadas/30_botao_confirmar.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  cursor: pointer;
+  text-indent: -9999px;
+  overflow: hidden;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.pp-confirmacao .btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
+.pp-confirmacao .btn:active { transform: translateY(0); }
+
+.pp-confirmacao .btn-secundario {
+  background-image: url('/assets/miniaturas_separadas/35_botao_nao_poderei_comparecer.png');
+}
+
+.pp-botoes-grupo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pp-botoes-grupo form {
+  margin: 0;
+}
+
+/* ===== z-index 90 — skip button ===== */
+.pp-skip {
+  position: absolute;
+  z-index: 90;
+  top: 0.75rem;
+  right: 0.75rem;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.45);
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+/* ===== Acessibilidade — prefers-reduced-motion ===== */
+@media (prefers-reduced-motion: reduce) {
+  .pp-cena * {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .pp-fundo-estrelado,
+  .pp-nuvens,
+  .pp-halo,
+  .pp-lua,
+  .pp-asteroide-grupo,
+  .pp-principe-perg,
+  .pp-raposa-perg,
+  .pp-pergaminho-grupo,
+  .pp-dados-evento,
+  .pp-confirmacao {
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: auto !important;
+  }
+
+  .pp-estrela-cadente {
+    display: none;
+  }
+
+  .pp-nomes::after {
+    content: none !important;
+  }
+}
+
+/* ===== Responsividade ===== */
+@media (max-width: 767px) {
+  .pp-cena {
+    border-radius: 0;
+  }
 }

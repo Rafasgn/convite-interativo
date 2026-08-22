@@ -15,6 +15,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         {
             builder.HasIndex(e => e.Slug).IsUnique();
 
+            builder.Property(e => e.Anfitrioes).HasMaxLength(200);
+            builder.Property(e => e.Homenageado).HasMaxLength(100);
+
             builder.HasMany(e => e.Convites)
                 .WithOne(c => c.Evento)
                 .HasForeignKey(c => c.EventoId);

@@ -33,7 +33,7 @@ public class ConvitePublicoServiceTests : IDisposable
         _connection.Dispose();
     }
 
-    private async Task<Evento> CriarEventoAsync(string slug)
+    private async Task<Evento> CriarEventoAsync(string slug, string? anfitrioes = null, string? homenageado = null)
     {
         var evento = new Evento
         {
@@ -42,6 +42,8 @@ public class ConvitePublicoServiceTests : IDisposable
             DataHora = DateTime.UtcNow.AddDays(30),
             Endereco = "Rua Teste, 123",
             TemaSlug = "pequeno-principe",
+            Anfitrioes = anfitrioes,
+            Homenageado = homenageado,
             DataCriacao = DateTime.UtcNow,
             DataAtualizacao = DateTime.UtcNow,
         };
@@ -196,5 +198,29 @@ public class ConvitePublicoServiceTests : IDisposable
         var brunoRecarregado = await _db.Convidados.FindAsync(bruno.Id);
         Assert.Equal(StatusConfirmacao.SemResposta, brunoRecarregado!.Status);
         Assert.Null(brunoRecarregado.DataConfirmacao);
+    }
+
+    [Fact]
+    public async Task CarregarPorTokenAsync_AnfitrioesEHomenageadoPreenchidos_RetornaValores()
+    {
+        var evento = await CriarEventoAsync("evento-7", anfitrioes: "Rafael e Ana Carolina", homenageado: "Zayan");
+        var convite = await CriarConviteAsync(evento.Id, "Família Silva");
+
+        var dto = await _service.CarregarPorTokenAsync(convite.Token);
+
+        Assert.Equal("Rafael e Ana Carolina", dto!.Evento.Anfitrioes);
+        Assert.Equal("Zayan", dto.Evento.Homenageado);
+    }
+
+    [Fact]
+    public async Task CarregarPorTokenAsync_AnfitrioesEHomenageadoNaoPreenchidos_RetornaNull()
+    {
+        var evento = await CriarEventoAsync("evento-8");
+        var convite = await CriarConviteAsync(evento.Id, "Família Silva");
+
+        var dto = await _service.CarregarPorTokenAsync(convite.Token);
+
+        Assert.Null(dto!.Evento.Anfitrioes);
+        Assert.Null(dto.Evento.Homenageado);
     }
 }

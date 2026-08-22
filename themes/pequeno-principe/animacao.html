@@ -1,14 +1,71 @@
 <!--
-  Stub de estrutura — sequência da animação (ADR 0009):
-  céu estrelado → Príncipe olhando a lua → raposa → rosa → envelope clicável
-  Ao clicar no envelope: revelação dos nomes (digitação) → dados do evento
-  (data, local, "como chegar") → confirmação individual por convidado (ADR 0008).
-  Conteúdo real a implementar; placeholders de arte via ADR 0010.
+  Tema Pequeno Príncipe — HU-05b. Estático por design (ADR 0009): não sabe de onde
+  vêm os dados, só consome window.dadosConvite (ver animacao.js) e preenche os
+  placeholders abaixo em runtime. A única parte dinâmica que precisa vir do server
+  (forms de confirmação com antiforgery/asp-page-handler) é injetada por fora deste
+  arquivo, na partial Razor que reaproveita esta mesma estrutura.
+
+  Sprites em /assets/miniaturas_separadas/ (PhysicalFileProvider, Program.cs).
+  Camadas (z-index) e timeline documentadas em docs/hus/HU-05b-animacao-tema-pequeno-principe.md.
 -->
-<section id="animacao-pequeno-principe">
-  <div class="cena" data-cena="ceu-estrelado"></div>
-  <div class="cena" data-cena="principe-lua"></div>
-  <div class="cena" data-cena="raposa"></div>
-  <div class="cena" data-cena="rosa"></div>
-  <div class="cena" data-cena="envelope"></div>
-</section>
+<div id="cena" class="pp-cena">
+  <button type="button" id="pp-skip" class="pp-skip" aria-label="Pular animação">
+    Pular animação
+  </button>
+
+  <img class="sprite pp-fundo-estrelado" src="/assets/miniaturas_separadas/16_estrelas_particulas.png" alt="" loading="eager" />
+
+  <img class="sprite pp-nuvens" src="/assets/miniaturas_separadas/18_nuvens_brancas.png" alt="" loading="eager" />
+
+  <img class="sprite pp-halo" src="/assets/miniaturas_separadas/24_esfera_estrelada.png" alt="" />
+
+  <img class="sprite pp-lua" src="/assets/miniaturas_separadas/25_lua_crescente.png" alt="" />
+
+  <img class="sprite pp-estrela-cadente" src="/assets/miniaturas_separadas/21_rastro_dourado.png" alt="" />
+
+  <div class="pp-asteroide-grupo">
+    <img class="sprite pp-asteroide" src="/assets/miniaturas_separadas/09_asteroide_rosa.png" alt="" />
+    <img class="sprite pp-principe" src="/assets/miniaturas_separadas/03_principe_sentado.png" alt="" />
+  </div>
+
+  <div id="pergaminho" class="pp-pergaminho-grupo">
+    <img class="sprite pp-pergaminho-img" src="/assets/miniaturas_separadas/26_pergaminho_grande.png" alt="" />
+
+    <img class="sprite pp-principe-perg" src="/assets/miniaturas_separadas/01_principe_em_pe.png" alt="" />
+
+    <img class="sprite pp-raposa-perg" src="/assets/miniaturas_separadas/07_raposa_dormindo.png" alt="" />
+
+    <div class="pp-pergaminho-conteudo">
+      <!--FRASE_CONVITE_INICIO-->
+      <!-- Preenchido pela partial Razor (_TemaPequenoPrincipe.cshtml) com a frase
+           de Anfitrioes/Homenageado (HU-08), só quando Evento.Anfitrioes existir. -->
+      <!--FRASE_CONVITE_FIM-->
+      <p id="pp-nomes" class="pp-nomes" aria-live="polite"></p>
+
+      <div id="pp-dados-evento" class="pp-dados-evento">
+        <p class="pp-dado">
+          <span class="pp-icone pp-icone-calendario" aria-hidden="true"></span>
+          <span id="pp-data-hora"></span>
+        </p>
+        <p class="pp-dado">
+          <span class="pp-icone pp-icone-local" aria-hidden="true"></span>
+          <span id="pp-endereco"></span>
+        </p>
+        <p class="pp-dado">
+          <a id="pp-link-mapa" href="#" target="_blank" rel="noopener">
+            <span class="pp-icone pp-icone-mapa" aria-hidden="true"></span>
+            Como chegar
+          </a>
+        </p>
+      </div>
+
+      <div id="pp-confirmacao" class="pp-confirmacao">
+        <!--CONFIRMACAO_INICIO-->
+        <!-- Preenchido pela partial Razor (_TemaPequenoPrincipe.cshtml) com os
+             forms reais de confirmação (asp-page-handler, antiforgery, ids dos
+             convidados) — este arquivo estático não tem esse dado. -->
+        <!--CONFIRMACAO_FIM-->
+      </div>
+    </div>
+  </div>
+</div>

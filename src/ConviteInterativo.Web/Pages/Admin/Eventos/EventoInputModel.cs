@@ -14,7 +14,7 @@ public class EventoInputModel
     public string Slug { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Informe a data e hora do evento.")]
-    public DateTime DataHora { get; set; }
+    public DateTime DataHora { get; set; } = DateTime.Now.AddDays(1);
 
     [Required(ErrorMessage = "Informe o endereço.")]
     public string Endereco { get; set; } = string.Empty;
@@ -24,4 +24,12 @@ public class EventoInputModel
 
     [Required(ErrorMessage = "Selecione o tema.")]
     public string TemaSlug { get; set; } = string.Empty;
+
+    [StringLength(200)]
+    [Display(Name = "Anfitriões")]
+    public string? Anfitrioes { get; set; }
+
+    [StringLength(100)]
+    [Display(Name = "Homenageado")]
+    public string? Homenageado { get; set; }
 }

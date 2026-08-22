@@ -1,0 +1,45 @@
+@model ConviteInterativo.Web.Pages.Convite.IndexModel
+
+@Html.Raw(Model.TemaHtmlAntes)
+
+@{
+    var frase = ConviteInterativo.Web.Pages.Convite.IndexModel.FraseConvite(Model.Evento);
+}
+@if (frase is not null)
+{
+    <p class="pp-frase-convite">@frase</p>
+}
+
+@Html.Raw(Model.TemaHtmlMeio)
+
+@if (Model.Convite.ModoConfirmacao == ConviteInterativo.Web.Data.Entities.ModoConfirmacao.Individual)
+{
+    @foreach (var convidado in Model.Convidados)
+    {
+        <div>
+            <span>@ConviteInterativo.Web.Pages.Convite.IndexModel.NomeExibicao(convidado, Model.Convite.Nome)</span>
+            <span>(@ConviteInterativo.Web.Pages.Convite.IndexModel.StatusExibicao(convidado.Status))</span>
+            <form method="post" asp-page-handler="ConfirmarIndividual">
+                <input type="hidden" name="convidadoId" value="@convidado.Id" />
+                <button type="submit" class="btn">Confirmar presença</button>
+            </form>
+            <form method="post" asp-page-handler="RecusarIndividual">
+                <input type="hidden" name="convidadoId" value="@convidado.Id" />
+                <button type="submit" class="btn btn-secundario">Não poderei comparecer</button>
+            </form>
+        </div>
+    }
+}
+else
+{
+    <div class="pp-botoes-grupo">
+        <form method="post" asp-page-handler="ConfirmarGrupo">
+            <button type="submit" class="btn">Confirmar presença</button>
+        </form>
+        <form method="post" asp-page-handler="RecusarGrupo">
+            <button type="submit" class="btn btn-secundario">Não poderei comparecer</button>
+        </form>
+    </div>
+}
+
+@Html.Raw(Model.TemaHtmlDepois)

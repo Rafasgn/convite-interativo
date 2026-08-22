@@ -43,6 +43,8 @@ public class CreateModel(AppDbContext db) : PageModel
             Endereco = Input.Endereco,
             LinkMapa = Input.LinkMapa,
             TemaSlug = Input.TemaSlug,
+            Anfitrioes = Input.Anfitrioes,
+            Homenageado = Input.Homenageado,
             DataCriacao = agora,
             DataAtualizacao = agora,
         });

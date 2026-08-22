@@ -6,8 +6,12 @@
 
 <h2>Editar Evento</h2>
 
+<p><a asp-page="./Convites/Index" asp-route-eventoId="@Model.Id">Ver convites deste evento</a></p>
+
 <form method="post">
     <input type="hidden" asp-for="Id" />
     <partial name="_EventoForm" model="Model.Input" />
     <button type="submit" class="btn">Salvar</button>
 </form>
+
+<p><a asp-page="./Index">Voltar</a></p>

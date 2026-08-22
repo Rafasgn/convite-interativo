@@ -30,6 +30,8 @@ public class EditModel(AppDbContext db) : PageModel
             Endereco = evento.Endereco,
             LinkMapa = evento.LinkMapa,
             TemaSlug = evento.TemaSlug,
+            Anfitrioes = evento.Anfitrioes,
+            Homenageado = evento.Homenageado,
         };
 
         return Page();
@@ -66,6 +68,8 @@ public class EditModel(AppDbContext db) : PageModel
         evento.Endereco = Input.Endereco;
         evento.LinkMapa = Input.LinkMapa;
         evento.TemaSlug = Input.TemaSlug;
+        evento.Anfitrioes = Input.Anfitrioes;
+        evento.Homenageado = Input.Homenageado;
         evento.DataAtualizacao = DateTime.UtcNow;
 
         await db.SaveChangesAsync();

@@ -9,6 +9,8 @@ public class Evento
     public required string Endereco { get; set; }
     public string? LinkMapa { get; set; }
     public required string TemaSlug { get; set; }
+    public string? Anfitrioes { get; set; }
+    public string? Homenageado { get; set; }
     public DateTime DataCriacao { get; set; }
     public DateTime DataAtualizacao { get; set; }
 

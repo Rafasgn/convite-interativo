@@ -1,15 +1,22 @@
 using ConviteInterativo.Web.Data.Entities;
 using ConviteInterativo.Web.Services;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace ConviteInterativo.Web.Pages.Convite;
 
-public class IndexModel(ConvitePublicoService service) : PageModel
+public class IndexModel(ConvitePublicoService service, IWebHostEnvironment env) : PageModel
 {
+    private const string MarcadorInicio = "<!--CONFIRMACAO_INICIO-->";
+    private const string MarcadorFim = "<!--CONFIRMACAO_FIM-->";
+
     public Evento Evento { get; set; } = null!;
     public Data.Entities.Convite Convite { get; set; } = null!;
     public List<Convidado> Convidados { get; set; } = [];
+
+    public string TemaHtmlAntes { get; private set; } = string.Empty;
+    public string TemaHtmlDepois { get; private set; } = string.Empty;
 
     public string LinkMapaResolvido => Evento.LinkMapa is { Length: > 0 }
         ? Evento.LinkMapa
@@ -36,6 +43,7 @@ public class IndexModel(ConvitePublicoService service) : PageModel
         }
 
         CarregarDto(dto);
+        await CarregarTemaHtmlAsync();
 
         return Page();
     }
@@ -127,6 +135,23 @@ public class IndexModel(ConvitePublicoService service) : PageModel
         Evento = dto.Evento;
         Convite = dto.Convite;
         Convidados = dto.Convidados;
+    }
+
+    private async Task CarregarTemaHtmlAsync()
+    {
+        var caminho = Path.Combine(env.ContentRootPath, "..", "..", "themes", "pequeno-principe", "animacao.html");
+        var html = await File.ReadAllTextAsync(caminho);
+
+        var indiceInicio = html.IndexOf(MarcadorInicio, StringComparison.Ordinal);
+        var indiceFim = html.IndexOf(MarcadorFim, StringComparison.Ordinal);
+
+        if (indiceInicio < 0 || indiceFim < 0 || indiceFim < indiceInicio)
+        {
+            throw new InvalidOperationException("Marcadores de confirmação não encontrados em animacao.html.");
+        }
+
+        TemaHtmlAntes = html[..(indiceInicio + MarcadorInicio.Length)];
+        TemaHtmlDepois = html[indiceFim..];
     }
 
     private async Task<(ConvitePublicoDto? dto, IActionResult? notFound)> CarregarOuNotFoundAsync(string token)
