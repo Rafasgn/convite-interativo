@@ -29,3 +29,4 @@ Thumbs.db
 # Logs / temp
 *.log
 tmp/
+appsettings.Development.json
