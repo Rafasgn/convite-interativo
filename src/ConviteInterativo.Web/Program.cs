@@ -99,5 +99,5 @@ app.UseAuthorization();
 app.MapStaticAssets();
 app.MapRazorPages()
    .WithStaticAssets();
-
+app.MapGet("/", () => Results.Redirect("/Admin/Login"));
 app.Run();

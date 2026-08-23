@@ -302,10 +302,10 @@ body {
   transform: translateY(10px);
   transition: opacity 0.8s ease, transform 0.8s ease;
   pointer-events: none;
-}
 
-.pp-confirmacao form {
-  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .pp-cena.fase-confirmacao .pp-confirmacao {
@@ -314,32 +314,53 @@ body {
   pointer-events: auto;
 }
 
+.pp-confirmacao form {
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  /* força os dois para perto */
+  gap: 0;
+}
+
 .pp-confirmacao .btn {
-  display: inline-block;
+  display: block;
   width: 220px;
   max-width: 90%;
+
   aspect-ratio: 3.5 / 1;
+
   padding: 0;
-  margin: 0 0.25rem;
+  margin: -10px 0;
+
   border: none;
   background-color: transparent;
   background-image: url('/assets/miniaturas_separadas/30_botao_confirmar.png');
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
+
   cursor: pointer;
   text-indent: -9999px;
   overflow: hidden;
+
   transition: transform 0.15s ease, filter 0.15s ease;
 }
-
-.pp-confirmacao .btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
-.pp-confirmacao .btn:active { transform: translateY(0); }
 
 .pp-confirmacao .btn-secundario {
   background-image: url('/assets/miniaturas_separadas/35_botao_nao_poderei_comparecer.png');
 }
+.pp-confirmacao .btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+}
 
+.pp-confirmacao .btn:active {
+  transform: translateY(0);
+}
 .pp-botoes-grupo {
   display: flex;
   flex-direction: column;
@@ -401,4 +422,77 @@ body {
   .pp-cena {
     border-radius: 0;
   }
+}
+
+/* ===== HU-10 — status do Grupo + compactação/scroll do Individual ===== */
+.pp-status-grupo {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 0.85rem;
+  font-style: italic;
+  color: #4a2f18;
+  margin: 0 0 0.5rem;
+  text-align: center;
+}
+
+/* Container scrollável dos convidados no modo Individual */
+.pp-convidados-scroll {
+  max-height: 12rem;
+  overflow-y: auto;
+  width: 100%;
+  padding: 0 0.5rem;
+  box-sizing: border-box;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(74, 47, 24, 0.4) transparent;
+
+  /* Sombra sutil na base indicando "tem mais" */
+  mask-image: linear-gradient(to bottom, black calc(100% - 1.5rem), transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 1.5rem), transparent 100%);
+}
+
+.pp-convidados-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.pp-convidados-scroll::-webkit-scrollbar-thumb {
+  background: rgba(74, 47, 24, 0.4);
+  border-radius: 3px;
+}
+
+/* Quando não passa de 2 convidados, sem sombra nem scroll visual */
+.pp-convidados-scroll.pp-sem-scroll {
+  mask-image: none;
+  -webkit-mask-image: none;
+}
+
+.pp-convidado-bloco {
+  margin-bottom: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pp-convidado-bloco:last-child {
+  margin-bottom: 0;
+}
+
+.pp-convidado-nome {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #4a2f18;
+  margin: 0 0 0.25rem;
+  text-align: center;
+}
+
+.pp-convidado-status {
+  font-weight: 400;
+  font-style: italic;
+  font-size: 0.75rem;
+}
+
+/* Botões menores no modo Individual — 70% do tamanho do Grupo */
+.pp-confirmacao .btn.btn-individual {
+  width: 155px;
+  aspect-ratio: 3.5 / 1;
+  margin: -7px 0;
 }

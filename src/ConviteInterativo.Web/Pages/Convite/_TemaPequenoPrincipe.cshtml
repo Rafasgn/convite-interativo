@@ -7,39 +7,40 @@
 }
 @if (frase is not null)
 {
-    <p class="pp-frase-convite">@frase</p>
+    <p class="pp-frase-convite">@Html.Raw(frase.Replace("\n", "<br />"))</p>
 }
 
 @Html.Raw(Model.TemaHtmlMeio)
 
 @if (Model.Convite.ModoConfirmacao == ConviteInterativo.Web.Data.Entities.ModoConfirmacao.Individual)
 {
-    @foreach (var convidado in Model.Convidados)
-    {
-        <div>
-            <span>@ConviteInterativo.Web.Pages.Convite.IndexModel.NomeExibicao(convidado, Model.Convite.Nome)</span>
-            <span>(@ConviteInterativo.Web.Pages.Convite.IndexModel.StatusExibicao(convidado.Status))</span>
-            <form method="post" asp-page-handler="ConfirmarIndividual">
-                <input type="hidden" name="convidadoId" value="@convidado.Id" />
-                <button type="submit" class="btn">Confirmar presença</button>
-            </form>
-            <form method="post" asp-page-handler="RecusarIndividual">
-                <input type="hidden" name="convidadoId" value="@convidado.Id" />
-                <button type="submit" class="btn btn-secundario">Não poderei comparecer</button>
-            </form>
-        </div>
-    }
+    <div class="pp-convidados-scroll">
+        @foreach (var convidado in Model.Convidados)
+        {
+            <div class="pp-convidado-bloco">
+                <p class="pp-convidado-nome">
+                    @ConviteInterativo.Web.Pages.Convite.IndexModel.NomeExibicao(convidado, Model.Convite.Nome)
+                    <span class="pp-convidado-status">(@ConviteInterativo.Web.Pages.Convite.IndexModel.StatusExibicao(convidado.Status))</span>
+                </p>
+                <form method="post">
+                    <button type="submit" class="btn btn-individual" asp-page-handler="ConfirmarIndividual" name="convidadoId" value="@convidado.Id">Confirmar presença</button>
+                    <button type="submit" class="btn btn-secundario btn-individual" asp-page-handler="RecusarIndividual" name="convidadoId" value="@convidado.Id">Não poderei comparecer</button>
+                </form>
+            </div>
+        }
+    </div>
 }
 else
 {
-    <div class="pp-botoes-grupo">
-        <form method="post" asp-page-handler="ConfirmarGrupo">
-            <button type="submit" class="btn">Confirmar presença</button>
-        </form>
-        <form method="post" asp-page-handler="RecusarGrupo">
-            <button type="submit" class="btn btn-secundario">Não poderei comparecer</button>
-        </form>
-    </div>
+    var statusGrupo = ConviteInterativo.Web.Pages.Convite.IndexModel.StatusGrupoExibicao(Model.Convidados);
+    if (statusGrupo is not null)
+    {
+        <p class="pp-status-grupo">@statusGrupo</p>
+    }
+    <form method="post">
+        <button type="submit" class="btn" asp-page-handler="ConfirmarGrupo">Confirmar presença</button>
+        <button type="submit" class="btn btn-secundario" asp-page-handler="RecusarGrupo">Não poderei comparecer</button>
+    </form>
 }
 
 @Html.Raw(Model.TemaHtmlDepois)

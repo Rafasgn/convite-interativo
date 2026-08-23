@@ -8,14 +8,17 @@ namespace ConviteInterativo.Web.Pages.Convite;
 
 public class IndexModel(ConvitePublicoService service, IWebHostEnvironment env) : PageModel
 {
-    private const string MarcadorInicio = "<!--CONFIRMACAO_INICIO-->";
-    private const string MarcadorFim = "<!--CONFIRMACAO_FIM-->";
+    private const string MarcadorFraseInicio = "<!--FRASE_CONVITE_INICIO-->";
+    private const string MarcadorFraseFim = "<!--FRASE_CONVITE_FIM-->";
+    private const string MarcadorConfirmacaoInicio = "<!--CONFIRMACAO_INICIO-->";
+    private const string MarcadorConfirmacaoFim = "<!--CONFIRMACAO_FIM-->";
 
     public Evento Evento { get; set; } = null!;
     public Data.Entities.Convite Convite { get; set; } = null!;
     public List<Convidado> Convidados { get; set; } = [];
 
     public string TemaHtmlAntes { get; private set; } = string.Empty;
+    public string TemaHtmlMeio { get; private set; } = string.Empty;
     public string TemaHtmlDepois { get; private set; } = string.Empty;
 
     public string LinkMapaResolvido => Evento.LinkMapa is { Length: > 0 }
@@ -33,6 +36,28 @@ public class IndexModel(ConvitePublicoService service, IWebHostEnvironment env) 
         StatusConfirmacao.NaoVai => "Não vai",
         _ => "Sem resposta",
     };
+
+    public static string? StatusGrupoExibicao(List<Convidado> convidados)
+    {
+        if (convidados.Count == 0)
+        {
+            return null;
+        }
+
+        return convidados[0].Status switch
+        {
+            StatusConfirmacao.Confirmado => "✓ Presença confirmada — pode editar abaixo",
+            StatusConfirmacao.NaoVai => "✗ Marcado como ausente — pode editar abaixo",
+            _ => null,
+        };
+    }
+
+    public static string? FraseConvite(Evento evento) =>
+        string.IsNullOrWhiteSpace(evento.Anfitrioes)
+            ? null
+            : string.IsNullOrWhiteSpace(evento.Homenageado)
+                ? $"{evento.Anfitrioes} convidam"
+                : $"{evento.Anfitrioes} convidam para\n{evento.Nome}";
 
     public async Task<IActionResult> OnGetAsync(string token)
     {
@@ -140,18 +165,23 @@ public class IndexModel(ConvitePublicoService service, IWebHostEnvironment env) 
     private async Task CarregarTemaHtmlAsync()
     {
         var caminho = Path.Combine(env.ContentRootPath, "..", "..", "themes", "pequeno-principe", "animacao.html");
-        var html = await File.ReadAllTextAsync(caminho);
+        var html = await System.IO.File.ReadAllTextAsync(caminho);
 
-        var indiceInicio = html.IndexOf(MarcadorInicio, StringComparison.Ordinal);
-        var indiceFim = html.IndexOf(MarcadorFim, StringComparison.Ordinal);
+        var indiceFraseInicio = html.IndexOf(MarcadorFraseInicio, StringComparison.Ordinal);
+        var indiceFraseFim = html.IndexOf(MarcadorFraseFim, StringComparison.Ordinal);
+        var indiceConfirmacaoInicio = html.IndexOf(MarcadorConfirmacaoInicio, StringComparison.Ordinal);
+        var indiceConfirmacaoFim = html.IndexOf(MarcadorConfirmacaoFim, StringComparison.Ordinal);
 
-        if (indiceInicio < 0 || indiceFim < 0 || indiceFim < indiceInicio)
+        if (indiceFraseInicio < 0 || indiceFraseFim < 0 || indiceFraseFim < indiceFraseInicio ||
+            indiceConfirmacaoInicio < 0 || indiceConfirmacaoFim < 0 || indiceConfirmacaoFim < indiceConfirmacaoInicio ||
+            indiceConfirmacaoInicio < indiceFraseFim)
         {
-            throw new InvalidOperationException("Marcadores de confirmação não encontrados em animacao.html.");
+            throw new InvalidOperationException("Marcadores de frase/confirmação não encontrados (ou fora de ordem) em animacao.html.");
         }
 
-        TemaHtmlAntes = html[..(indiceInicio + MarcadorInicio.Length)];
-        TemaHtmlDepois = html[indiceFim..];
+        TemaHtmlAntes = html[..(indiceFraseInicio + MarcadorFraseInicio.Length)];
+        TemaHtmlMeio = html[indiceFraseFim..(indiceConfirmacaoInicio + MarcadorConfirmacaoInicio.Length)];
+        TemaHtmlDepois = html[indiceConfirmacaoFim..];
     }
 
     private async Task<(ConvitePublicoDto? dto, IActionResult? notFound)> CarregarOuNotFoundAsync(string token)
