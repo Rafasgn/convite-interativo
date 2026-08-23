@@ -496,3 +496,13 @@ body {
   aspect-ratio: 3.5 / 1;
   margin: -7px 0;
 }
+
+/* HU-12 — estado de loading durante o fetch AJAX do partial refresh */
+.pp-btn-loading {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.pp-btn-loading::after {
+  content: ' ...';
+}

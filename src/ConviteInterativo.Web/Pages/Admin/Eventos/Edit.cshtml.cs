@@ -31,6 +31,7 @@ public class EditModel(AppDbContext db) : PageModel
             LinkMapa = evento.LinkMapa,
             TemaSlug = evento.TemaSlug,
             Anfitrioes = evento.Anfitrioes,
+            EmailAnfitrioes = evento.EmailAnfitrioes,
             Homenageado = evento.Homenageado,
         };
 
@@ -69,6 +70,7 @@ public class EditModel(AppDbContext db) : PageModel
         evento.LinkMapa = Input.LinkMapa;
         evento.TemaSlug = Input.TemaSlug;
         evento.Anfitrioes = Input.Anfitrioes;
+        evento.EmailAnfitrioes = Input.EmailAnfitrioes;
         evento.Homenageado = Input.Homenageado;
         evento.DataAtualizacao = DateTime.UtcNow;
 

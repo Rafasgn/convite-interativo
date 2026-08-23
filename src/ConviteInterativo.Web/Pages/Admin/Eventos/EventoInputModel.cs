@@ -29,6 +29,12 @@ public class EventoInputModel
     [Display(Name = "Anfitriões")]
     public string? Anfitrioes { get; set; }
 
+    [Required(ErrorMessage = "Informe o email dos anfitriões.")]
+    [EmailAddress(ErrorMessage = "Email inválido.")]
+    [StringLength(200)]
+    [Display(Name = "Email dos anfitriões")]
+    public string EmailAnfitrioes { get; set; } = string.Empty;
+
     [StringLength(100)]
     [Display(Name = "Homenageado")]
     public string? Homenageado { get; set; }

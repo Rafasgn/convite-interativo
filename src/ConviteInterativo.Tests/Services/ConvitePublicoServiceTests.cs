@@ -44,6 +44,7 @@ public class ConvitePublicoServiceTests : IDisposable
             TemaSlug = "pequeno-principe",
             Anfitrioes = anfitrioes,
             Homenageado = homenageado,
+            EmailAnfitrioes = "anfitrioes@example.com",
             DataCriacao = DateTime.UtcNow,
             DataAtualizacao = DateTime.UtcNow,
         };
@@ -222,5 +223,16 @@ public class ConvitePublicoServiceTests : IDisposable
 
         Assert.Null(dto!.Evento.Anfitrioes);
         Assert.Null(dto.Evento.Homenageado);
+    }
+
+    [Fact]
+    public async Task CarregarPorTokenAsync_RetornaEmailAnfitrioes_DoEvento()
+    {
+        var evento = await CriarEventoAsync("evento-9");
+        var convite = await CriarConviteAsync(evento.Id, "Família Silva");
+
+        var dto = await _service.CarregarPorTokenAsync(convite.Token);
+
+        Assert.Equal("anfitrioes@example.com", dto!.Evento.EmailAnfitrioes);
     }
 }

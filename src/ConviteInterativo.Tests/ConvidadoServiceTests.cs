@@ -42,6 +42,7 @@ public class ConvidadoServiceTests : IDisposable
             DataHora = DateTime.UtcNow.AddDays(30),
             Endereco = "Rua Teste, 123",
             TemaSlug = "pequeno-principe",
+            EmailAnfitrioes = "anfitrioes@example.com",
             DataCriacao = DateTime.UtcNow,
             DataAtualizacao = DateTime.UtcNow,
         };

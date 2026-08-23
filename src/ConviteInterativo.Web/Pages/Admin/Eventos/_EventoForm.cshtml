@@ -11,6 +11,10 @@
 <input asp-for="Anfitrioes" placeholder='Ex: "Rafael e Ana Carolina". Opcional.' />
 <span asp-validation-for="Anfitrioes" class="field-validation-error"></span>
 
+<label asp-for="EmailAnfitrioes"></label>
+<input asp-for="EmailAnfitrioes" type="email" placeholder="Email que receberá as notificações de RSVP" />
+<span asp-validation-for="EmailAnfitrioes" class="field-validation-error"></span>
+
 <label asp-for="Homenageado"></label>
 <input asp-for="Homenageado" placeholder='Ex: "Zayan". Opcional. Só aparece na frase se Anfitriões também estiver preenchido.' />
 <span asp-validation-for="Homenageado" class="field-validation-error"></span>

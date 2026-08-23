@@ -6,7 +6,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace ConviteInterativo.Web.Pages.Convite;
 
-public class IndexModel(ConvitePublicoService service, IWebHostEnvironment env) : PageModel
+public class IndexModel(
+    ConvitePublicoService service,
+    IWebHostEnvironment env,
+    PdfConfirmadosService pdfService,
+    INotificacaoService notificacaoService) : PageModel
 {
     private const string MarcadorFraseInicio = "<!--FRASE_CONVITE_INICIO-->";
     private const string MarcadorFraseFim = "<!--FRASE_CONVITE_FIM-->";
@@ -88,7 +92,20 @@ public class IndexModel(ConvitePublicoService service, IWebHostEnvironment env) 
 
         await service.ConfirmarGrupoAsync(dto.Convite.Id, StatusConfirmacao.Confirmado);
 
-        return RedirectToPage(new { token });
+        var atualizado = await service.CarregarPorTokenAsync(token);
+        if (atualizado is not null)
+        {
+            var pdfBytes = await pdfService.GerarConfirmadosAsync(atualizado.Evento.Id);
+
+            foreach (var convidadoAtualizado in atualizado.Convidados)
+            {
+                notificacaoService.NotificarResposta(
+                    atualizado.Evento, atualizado.Convite, convidadoAtualizado,
+                    StatusConfirmacao.Confirmado, pdfBytes);
+            }
+        }
+
+        return await RetornarPartialOuRedirectAsync(token);
     }
 
     public async Task<IActionResult> OnPostRecusarGrupoAsync(string token)
@@ -106,7 +123,18 @@ public class IndexModel(ConvitePublicoService service, IWebHostEnvironment env) 
 
         await service.ConfirmarGrupoAsync(dto.Convite.Id, StatusConfirmacao.NaoVai);
 
-        return RedirectToPage(new { token });
+        var atualizado = await service.CarregarPorTokenAsync(token);
+        if (atualizado is not null)
+        {
+            foreach (var convidadoAtualizado in atualizado.Convidados)
+            {
+                notificacaoService.NotificarResposta(
+                    atualizado.Evento, atualizado.Convite, convidadoAtualizado,
+                    StatusConfirmacao.NaoVai, null);
+            }
+        }
+
+        return await RetornarPartialOuRedirectAsync(token);
     }
 
     public async Task<IActionResult> OnPostConfirmarIndividualAsync(string token, int convidadoId)
@@ -129,7 +157,17 @@ public class IndexModel(ConvitePublicoService service, IWebHostEnvironment env) 
 
         await service.ConfirmarIndividualAsync(convidadoId, StatusConfirmacao.Confirmado);
 
-        return RedirectToPage(new { token });
+        var atualizado = await service.CarregarPorTokenAsync(token);
+        var convidadoAtualizado = atualizado?.Convidados.FirstOrDefault(c => c.Id == convidadoId);
+        if (atualizado is not null && convidadoAtualizado is not null)
+        {
+            var pdfBytes = await pdfService.GerarConfirmadosAsync(atualizado.Evento.Id);
+            notificacaoService.NotificarResposta(
+                atualizado.Evento, atualizado.Convite, convidadoAtualizado,
+                StatusConfirmacao.Confirmado, pdfBytes);
+        }
+
+        return await RetornarPartialOuRedirectAsync(token);
     }
 
     public async Task<IActionResult> OnPostRecusarIndividualAsync(string token, int convidadoId)
@@ -152,7 +190,16 @@ public class IndexModel(ConvitePublicoService service, IWebHostEnvironment env) 
 
         await service.ConfirmarIndividualAsync(convidadoId, StatusConfirmacao.NaoVai);
 
-        return RedirectToPage(new { token });
+        var atualizado = await service.CarregarPorTokenAsync(token);
+        var convidadoAtualizado = atualizado?.Convidados.FirstOrDefault(c => c.Id == convidadoId);
+        if (atualizado is not null && convidadoAtualizado is not null)
+        {
+            notificacaoService.NotificarResposta(
+                atualizado.Evento, atualizado.Convite, convidadoAtualizado,
+                StatusConfirmacao.NaoVai, null);
+        }
+
+        return await RetornarPartialOuRedirectAsync(token);
     }
 
     private void CarregarDto(ConvitePublicoDto dto)
@@ -193,5 +240,26 @@ public class IndexModel(ConvitePublicoService service, IWebHostEnvironment env) 
         }
 
         return (dto, null);
+    }
+
+    private bool EhRequisicaoAjax() =>
+        Request.Headers["X-Requested-With"] == "XMLHttpRequest";
+
+    private async Task<IActionResult> RetornarPartialOuRedirectAsync(string token)
+    {
+        if (!EhRequisicaoAjax())
+        {
+            return RedirectToPage(new { token });
+        }
+
+        // Recarrega o dto atualizado pra popular o Model do partial
+        var atualizado = await service.CarregarPorTokenAsync(token);
+        if (atualizado is null)
+        {
+            return NotFound();
+        }
+
+        CarregarDto(atualizado);
+        return Partial("_ConfirmacaoConteudo", this);
     }
 }

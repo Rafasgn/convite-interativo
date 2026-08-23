@@ -17,6 +17,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
             builder.Property(e => e.Anfitrioes).HasMaxLength(200);
             builder.Property(e => e.Homenageado).HasMaxLength(100);
+            builder.Property(e => e.EmailAnfitrioes).HasMaxLength(200).IsRequired();
 
             builder.HasMany(e => e.Convites)
                 .WithOne(c => c.Evento)

@@ -1,0 +1,32 @@
+@model ConviteInterativo.Web.Pages.Convite.IndexModel
+
+@if (Model.Convite.ModoConfirmacao == ConviteInterativo.Web.Data.Entities.ModoConfirmacao.Individual)
+{
+    <div class="pp-convidados-scroll">
+        @foreach (var convidado in Model.Convidados)
+        {
+            <div class="pp-convidado-bloco">
+                <p class="pp-convidado-nome">
+                    @ConviteInterativo.Web.Pages.Convite.IndexModel.NomeExibicao(convidado, Model.Convite.Nome)
+                    <span class="pp-convidado-status">(@ConviteInterativo.Web.Pages.Convite.IndexModel.StatusExibicao(convidado.Status))</span>
+                </p>
+                <form method="post" data-pp-form>
+                    <button type="submit" class="btn btn-individual" asp-page-handler="ConfirmarIndividual" name="convidadoId" value="@convidado.Id">Confirmar presença</button>
+                    <button type="submit" class="btn btn-secundario btn-individual" asp-page-handler="RecusarIndividual" name="convidadoId" value="@convidado.Id">Não poderei comparecer</button>
+                </form>
+            </div>
+        }
+    </div>
+}
+else
+{
+    var statusGrupo = ConviteInterativo.Web.Pages.Convite.IndexModel.StatusGrupoExibicao(Model.Convidados);
+    if (statusGrupo is not null)
+    {
+        <p class="pp-status-grupo">@statusGrupo</p>
+    }
+    <form method="post" data-pp-form>
+        <button type="submit" class="btn" asp-page-handler="ConfirmarGrupo">Confirmar presença</button>
+        <button type="submit" class="btn btn-secundario" asp-page-handler="RecusarGrupo">Não poderei comparecer</button>
+    </form>
+}

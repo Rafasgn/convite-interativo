@@ -32,6 +32,11 @@ builder.Services.AddScoped<ConvidadoService>();
 // Scoped porque depende do AppDbContext (também scoped) — HU-05a.
 builder.Services.AddScoped<ConvitePublicoService>();
 
+// HU-11: notificação por email + PDF de confirmados.
+builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection("Smtp"));
+builder.Services.AddScoped<INotificacaoService, NotificacaoService>();
+builder.Services.AddScoped<PdfConfirmadosService>();
+
 builder.Services.AddMemoryCache();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

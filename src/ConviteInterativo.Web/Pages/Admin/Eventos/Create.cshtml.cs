@@ -44,6 +44,7 @@ public class CreateModel(AppDbContext db) : PageModel
             LinkMapa = Input.LinkMapa,
             TemaSlug = Input.TemaSlug,
             Anfitrioes = Input.Anfitrioes,
+            EmailAnfitrioes = Input.EmailAnfitrioes,
             Homenageado = Input.Homenageado,
             DataCriacao = agora,
             DataAtualizacao = agora,
