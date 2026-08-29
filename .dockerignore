@@ -1,0 +1,34 @@
+# flyctl launch added from .gitignore
+# .NET
+**/bin
+**/obj
+**/*.user
+**/*.suo
+**/.vs
+**/*.userprefs
+
+# IDEs
+**/.idea
+**/.vscode
+
+# Node (caso entre libs de front)
+**/node_modules
+**/npm-debug.log*
+
+# SQLite local
+**/*.db
+**/*.db-shm
+**/*.db-wal
+
+# Dados de runtime (SQLite local + volume persistente em produção - ADR 0002)
+data
+
+# OS
+**/.DS_Store
+**/Thumbs.db
+
+# Logs / temp
+**/*.log
+**/tmp
+**/appsettings.Development.json
+fly.toml

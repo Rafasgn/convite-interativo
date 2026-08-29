@@ -2,10 +2,8 @@
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
-COPY ConviteInterativo.sln .
 COPY src/ConviteInterativo.Web/ConviteInterativo.Web.csproj src/ConviteInterativo.Web/
-COPY src/ConviteInterativo.Tests/ConviteInterativo.Tests.csproj src/ConviteInterativo.Tests/
-RUN dotnet restore ConviteInterativo.sln
+RUN dotnet restore src/ConviteInterativo.Web/ConviteInterativo.Web.csproj
 
 COPY src/ src/
 RUN dotnet publish src/ConviteInterativo.Web/ConviteInterativo.Web.csproj -c Release -o /app/src/ConviteInterativo.Web --no-restore

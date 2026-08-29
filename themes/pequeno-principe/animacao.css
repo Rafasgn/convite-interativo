@@ -226,11 +226,11 @@ body {
   color: #4a2f18;
   text-align: center;
   margin: 0 0 0.5rem;
-  font-size: 0.95rem;
+  font-size: clamp(0.7rem, 3.2vw, 0.95rem);
 }
 
 .pp-nomes {
-  font-size: 0.95rem;
+  font-size: clamp(0.7rem, 3.2vw, 0.95rem);
   font-weight: 600;
   min-height: 1.4em;
   margin: 0 0 0.75rem;
@@ -251,7 +251,7 @@ body {
   opacity: 0;
   transform: translateY(10px);
   transition: opacity 0.8s ease, transform 0.8s ease;
-  font-size: 0.85rem;
+  font-size: clamp(0.63rem, 2.9vw, 0.85rem);
 }
 
 .pp-cena.fase-dados .pp-dados-evento {
@@ -426,12 +426,26 @@ body {
   .pp-cena {
     border-radius: 0;
   }
+
+  /* Afrouxa o inset horizontal pra dar mais largura útil ao texto sem invadir
+     a moldura dourada do pergaminho (mantém topo/base intactos). */
+  .pp-pergaminho-conteudo {
+    inset: 18% 10% 12% 10%;
+  }
+
+  /* Rede de segurança pra nomes longos ("Roselane Gonçalves") não estourarem
+     mesmo com a fonte já escalada via clamp(). */
+  .pp-frase-convite,
+  .pp-nomes {
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
 }
 
 /* ===== HU-10 — status do Grupo + compactação/scroll do Individual ===== */
 .pp-status-grupo {
   font-family: Georgia, 'Times New Roman', serif;
-  font-size: 0.85rem;
+  font-size: clamp(0.63rem, 2.9vw, 0.85rem);
   font-style: italic;
   color: #4a2f18;
   margin: 0 0 0.5rem;
@@ -586,7 +600,7 @@ body {
 
 .pp-status-inline {
   font-family: Georgia, 'Times New Roman', serif;
-  font-size: 0.8rem;
+  font-size: clamp(0.59rem, 2.7vw, 0.8rem);
   font-style: italic;
   color: #4a2f18;
   margin: 0 0 0.35rem;
