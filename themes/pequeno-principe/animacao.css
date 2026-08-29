@@ -459,6 +459,13 @@ body {
     word-break: break-word;
   }
 
+  /* Respiro à esquerda pros ícones de .pp-dado não encostarem na moldura
+     dourada do pergaminho (linhas mais largas, como o endereço, ocupam a
+     largura útil inteira e o ícone fica colado na borda sem isso). */
+  .pp-dados-evento {
+    padding-left: 0.6rem;
+  }
+
   /* Balão de fala — reduz o quanto sangra pra fora da cena à esquerda no
      mobile (desktop mantém -15%, valor original). */
   .pp-balao-grupo {
