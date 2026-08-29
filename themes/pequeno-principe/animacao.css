@@ -568,3 +568,27 @@ body {
   60%  { opacity: 0; }
   100% { opacity: 0; }
 }
+
+/* HU-13 — prazo */
+.pp-esconder-dados #pp-dados-evento {
+  display: none;
+}
+
+.pp-prazo-encerrado {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 0.85rem;
+  font-style: italic;
+  color: #4a2f18;
+  text-align: center;
+  margin: 0.5rem 0;
+  line-height: 1.4;
+}
+
+.pp-status-inline {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 0.8rem;
+  font-style: italic;
+  color: #4a2f18;
+  margin: 0 0 0.35rem;
+  text-align: center;
+}

@@ -5,28 +5,78 @@
     <div class="pp-convidados-scroll">
         @foreach (var convidado in Model.Convidados)
         {
+            var mostrarBlocoEnc = ConviteInterativo.Web.Pages.Convite.IndexModel.MostrarBlocoPrazoEncerrado(convidado, Model.Convite, Model.Evento);
+            var mostrarConfirmar = ConviteInterativo.Web.Pages.Convite.IndexModel.MostrarBotaoConfirmar(convidado, Model.Convite, Model.Evento);
+            var mostrarRecusar = ConviteInterativo.Web.Pages.Convite.IndexModel.MostrarBotaoRecusar(convidado, Model.Convite, Model.Evento);
+            var statusTexto = ConviteInterativo.Web.Pages.Convite.IndexModel.StatusExibicaoIndividual(convidado, Model.Convite, Model.Evento);
+
             <div class="pp-convidado-bloco">
                 <p class="pp-convidado-nome">
                     @ConviteInterativo.Web.Pages.Convite.IndexModel.NomeExibicao(convidado, Model.Convite.Nome)
-                    <span class="pp-convidado-status">(@ConviteInterativo.Web.Pages.Convite.IndexModel.StatusExibicao(convidado.Status))</span>
                 </p>
-                <form method="post" data-pp-form>
-                    <button type="submit" class="btn btn-individual" asp-page-handler="ConfirmarIndividual" name="convidadoId" value="@convidado.Id">Confirmar presença</button>
-                    <button type="submit" class="btn btn-secundario btn-individual" asp-page-handler="RecusarIndividual" name="convidadoId" value="@convidado.Id">Não poderei comparecer</button>
-                </form>
+
+                @if (mostrarBlocoEnc)
+                {
+                    <p class="pp-prazo-encerrado">Infelizmente o prazo para confirmação se esgotou. Agradecemos pela atenção.</p>
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(statusTexto))
+                    {
+                        <p class="pp-status-inline">@statusTexto</p>
+                    }
+                    if (mostrarConfirmar || mostrarRecusar)
+                    {
+                        <form method="post" data-pp-form>
+                            @if (mostrarConfirmar)
+                            {
+                                <button type="submit" class="btn btn-individual"
+                                        asp-page-handler="ConfirmarIndividual"
+                                        name="convidadoId" value="@convidado.Id">Confirmar presença</button>
+                            }
+                            @if (mostrarRecusar)
+                            {
+                                <button type="submit" class="btn btn-secundario btn-individual"
+                                        asp-page-handler="RecusarIndividual"
+                                        name="convidadoId" value="@convidado.Id">Não poderei comparecer</button>
+                            }
+                        </form>
+                    }
+                }
             </div>
         }
     </div>
 }
 else
 {
-    var statusGrupo = ConviteInterativo.Web.Pages.Convite.IndexModel.StatusGrupoExibicao(Model.Convidados);
-    if (statusGrupo is not null)
+    var statusGrupo = ConviteInterativo.Web.Pages.Convite.IndexModel.StatusGrupoExibicao(Model.Convidados, Model.Convite, Model.Evento);
+    var mostrarBlocoEncGrupo = ConviteInterativo.Web.Pages.Convite.IndexModel.MostrarBlocoPrazoEncerradoGrupo(Model.Convidados, Model.Convite, Model.Evento);
+    var refConvidado = Model.Convidados.Count > 0 ? Model.Convidados[0] : null;
+    var mostrarConfirmarGrupo = refConvidado is not null && ConviteInterativo.Web.Pages.Convite.IndexModel.MostrarBotaoConfirmar(refConvidado, Model.Convite, Model.Evento);
+    var mostrarRecusarGrupo = refConvidado is not null && ConviteInterativo.Web.Pages.Convite.IndexModel.MostrarBotaoRecusar(refConvidado, Model.Convite, Model.Evento);
+
+    if (mostrarBlocoEncGrupo)
     {
-        <p class="pp-status-grupo">@statusGrupo</p>
+        <p class="pp-prazo-encerrado">Infelizmente o prazo para confirmação se esgotou. Agradecemos pela atenção.</p>
     }
-    <form method="post" data-pp-form>
-        <button type="submit" class="btn" asp-page-handler="ConfirmarGrupo">Confirmar presença</button>
-        <button type="submit" class="btn btn-secundario" asp-page-handler="RecusarGrupo">Não poderei comparecer</button>
-    </form>
+    else
+    {
+        if (!string.IsNullOrEmpty(statusGrupo))
+        {
+            <p class="pp-status-grupo">@statusGrupo</p>
+        }
+        if (mostrarConfirmarGrupo || mostrarRecusarGrupo)
+        {
+            <form method="post" data-pp-form>
+                @if (mostrarConfirmarGrupo)
+                {
+                    <button type="submit" class="btn" asp-page-handler="ConfirmarGrupo">Confirmar presença</button>
+                }
+                @if (mostrarRecusarGrupo)
+                {
+                    <button type="submit" class="btn btn-secundario" asp-page-handler="RecusarGrupo">Não poderei comparecer</button>
+                }
+            </form>
+        }
+    }
 }

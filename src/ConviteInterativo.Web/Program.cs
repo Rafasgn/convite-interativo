@@ -1,6 +1,7 @@
 using ConviteInterativo.Web.Data;
 using ConviteInterativo.Web.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
@@ -38,6 +39,20 @@ builder.Services.AddScoped<PdfConfirmadosService>();
 
 builder.Services.AddMemoryCache();
 
+// ADR 0015 decisão 2: Fly termina TLS no edge e fala HTTP com a app internamente.
+// Sem isso, Request.Scheme chega como http (link do convite sairia http:// no
+// WhatsApp) e o cookie Secure do admin quebra.
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+
+    // O middleware só confia em proxies loopback por padrão. O edge da Fly não é
+    // loopback, então sem limpar essas listas os headers X-Forwarded-* são
+    // ignorados silenciosamente e o fix acima não tem efeito nenhum em produção.
+    options.KnownNetworks.Clear();
+    options.KnownProxies.Clear();
+});
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
@@ -53,6 +68,10 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 
 var app = builder.Build();
+
+// Cedo no pipeline — antes de UseHttpsRedirection/UseHsts/auth, que dependem do
+// Scheme/RemoteIp já corrigidos pelos headers do proxy da Fly (ADR 0015 decisão 2).
+app.UseForwardedHeaders();
 
 // ADR 0002: o driver do SQLite não cria diretórios pai automaticamente — sem isso,
 // a primeira execução crasha com "SQLite Error 14: unable to open database file".

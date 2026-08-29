@@ -1,3 +1,4 @@
+using System.Globalization;
 using ConviteInterativo.Web.Data.Entities;
 using ConviteInterativo.Web.Services;
 using Microsoft.AspNetCore.Hosting;
@@ -17,6 +18,11 @@ public class IndexModel(
     private const string MarcadorConfirmacaoInicio = "<!--CONFIRMACAO_INICIO-->";
     private const string MarcadorConfirmacaoFim = "<!--CONFIRMACAO_FIM-->";
 
+    private static readonly CultureInfo CulturaPtBr = new("pt-BR");
+
+    private const int DiasAntesEventoAntecipado = 10;
+    private const int DiasAntesEventoTardio = 2;
+
     public Evento Evento { get; set; } = null!;
     public Data.Entities.Convite Convite { get; set; } = null!;
     public List<Convidado> Convidados { get; set; } = [];
@@ -34,34 +40,102 @@ public class IndexModel(
             ? $"{convidado.Nome} ({nomeConvite})"
             : $"{convidado.Nome} {convidado.Sobrenome}";
 
-    public static string StatusExibicao(StatusConfirmacao status) => status switch
-    {
-        StatusConfirmacao.Confirmado => "Confirmado",
-        StatusConfirmacao.NaoVai => "Não vai",
-        _ => "Sem resposta",
-    };
-
-    public static string? StatusGrupoExibicao(List<Convidado> convidados)
-    {
-        if (convidados.Count == 0)
-        {
-            return null;
-        }
-
-        return convidados[0].Status switch
-        {
-            StatusConfirmacao.Confirmado => "✓ Presença confirmada — pode editar abaixo",
-            StatusConfirmacao.NaoVai => "✗ Marcado como ausente — pode editar abaixo",
-            _ => null,
-        };
-    }
-
     public static string? FraseConvite(Evento evento) =>
         string.IsNullOrWhiteSpace(evento.Anfitrioes)
             ? null
             : string.IsNullOrWhiteSpace(evento.Homenageado)
                 ? $"{evento.Anfitrioes} convidam"
                 : $"{evento.Anfitrioes} convidam para\n{evento.Nome}";
+
+    public static bool EhConviteTardio(Data.Entities.Convite convite, Evento evento)
+    {
+        var limiteAntecipado = evento.DataHora.Date.AddDays(-DiasAntesEventoAntecipado);
+        return convite.DataCriacao.Date > limiteAntecipado;
+    }
+
+    public static DateTime PrazoLimite(Data.Entities.Convite convite, Evento evento)
+    {
+        var diasAntes = EhConviteTardio(convite, evento)
+            ? DiasAntesEventoTardio
+            : DiasAntesEventoAntecipado;
+
+        // AddDays(1).AddSeconds(-1) empurra pra 23:59:59 do dia N-antes
+        return evento.DataHora.Date.AddDays(-diasAntes).AddDays(1).AddSeconds(-1);
+    }
+
+    public static string PrazoLimiteFormatado(Data.Entities.Convite convite, Evento evento) =>
+        PrazoLimite(convite, evento).ToString("dd 'de' MMMM", CulturaPtBr);
+
+    public static bool PrazoEncerrado(Data.Entities.Convite convite, Evento evento) =>
+        DataHoraBrasil.Agora > PrazoLimite(convite, evento);
+
+    public static string StatusExibicaoIndividual(Convidado convidado, Data.Entities.Convite convite, Evento evento)
+    {
+        var estourado = PrazoEncerrado(convite, evento);
+        return convidado.Status switch
+        {
+            StatusConfirmacao.Confirmado => "✓ Presença confirmada",
+            StatusConfirmacao.NaoVai when !estourado => "✗ Marcado como ausente",
+            StatusConfirmacao.NaoVai => "", // pós-prazo cai no bloco de encerramento, sem status
+            _ when !estourado => $"Confirme se poderá comparecer até {PrazoLimiteFormatado(convite, evento)}",
+            _ => "", // pós-prazo cai no bloco de encerramento
+        };
+    }
+
+    public static bool MostrarBotaoConfirmar(Convidado convidado, Data.Entities.Convite convite, Evento evento)
+    {
+        if (PrazoEncerrado(convite, evento))
+        {
+            return false;
+        }
+
+        // Antes do prazo: mostra confirmar se sem resposta ou já recusado (deixa mudar de ideia)
+        return convidado.Status != StatusConfirmacao.Confirmado;
+    }
+
+    public static bool MostrarBotaoRecusar(Convidado convidado, Data.Entities.Convite convite, Evento evento)
+    {
+        if (PrazoEncerrado(convite, evento))
+        {
+            // Pós-prazo: só Confirmado ainda pode cancelar (imprevisto)
+            return convidado.Status == StatusConfirmacao.Confirmado;
+        }
+
+        // Antes do prazo: mostra recusar se sem resposta ou já confirmado
+        return convidado.Status != StatusConfirmacao.NaoVai;
+    }
+
+    public static bool MostrarDadosEvento(Convidado convidado, Data.Entities.Convite convite, Evento evento)
+    {
+        if (!PrazoEncerrado(convite, evento))
+        {
+            return true;
+        }
+
+        return convidado.Status == StatusConfirmacao.Confirmado;
+    }
+
+    public static bool MostrarBlocoPrazoEncerrado(Convidado convidado, Data.Entities.Convite convite, Evento evento)
+    {
+        if (!PrazoEncerrado(convite, evento))
+        {
+            return false;
+        }
+
+        return convidado.Status != StatusConfirmacao.Confirmado;
+    }
+
+    // Grupo: usa o primeiro convidado como referência (todos têm mesmo status no Grupo)
+    public static string StatusGrupoExibicao(List<Convidado> convidados, Data.Entities.Convite convite, Evento evento) =>
+        convidados.Count > 0
+            ? StatusExibicaoIndividual(convidados[0], convite, evento)
+            : "";
+
+    public static bool MostrarDadosEventoGrupo(List<Convidado> convidados, Data.Entities.Convite convite, Evento evento) =>
+        convidados.Count > 0 && MostrarDadosEvento(convidados[0], convite, evento);
+
+    public static bool MostrarBlocoPrazoEncerradoGrupo(List<Convidado> convidados, Data.Entities.Convite convite, Evento evento) =>
+        convidados.Count > 0 && MostrarBlocoPrazoEncerrado(convidados[0], convite, evento);
 
     public async Task<IActionResult> OnGetAsync(string token)
     {
@@ -86,6 +160,12 @@ public class IndexModel(
         }
 
         if (dto.Convite.ModoConfirmacao != ModoConfirmacao.Grupo)
+        {
+            return BadRequest();
+        }
+
+        var refConvidado = dto.Convidados.Count > 0 ? dto.Convidados[0] : null;
+        if (refConvidado is null || !MostrarBotaoConfirmar(refConvidado, dto.Convite, dto.Evento))
         {
             return BadRequest();
         }
@@ -121,6 +201,12 @@ public class IndexModel(
             return BadRequest();
         }
 
+        var refConvidado = dto.Convidados.Count > 0 ? dto.Convidados[0] : null;
+        if (refConvidado is null || !MostrarBotaoRecusar(refConvidado, dto.Convite, dto.Evento))
+        {
+            return BadRequest();
+        }
+
         await service.ConfirmarGrupoAsync(dto.Convite.Id, StatusConfirmacao.NaoVai);
 
         var atualizado = await service.CarregarPorTokenAsync(token);
@@ -150,9 +236,15 @@ public class IndexModel(
             return BadRequest();
         }
 
-        if (!dto.Convidados.Any(c => c.Id == convidadoId))
+        var convidado = dto.Convidados.FirstOrDefault(c => c.Id == convidadoId);
+        if (convidado is null)
         {
             return NotFound();
+        }
+
+        if (!MostrarBotaoConfirmar(convidado, dto.Convite, dto.Evento))
+        {
+            return BadRequest();
         }
 
         await service.ConfirmarIndividualAsync(convidadoId, StatusConfirmacao.Confirmado);
@@ -183,9 +275,15 @@ public class IndexModel(
             return BadRequest();
         }
 
-        if (!dto.Convidados.Any(c => c.Id == convidadoId))
+        var convidado = dto.Convidados.FirstOrDefault(c => c.Id == convidadoId);
+        if (convidado is null)
         {
             return NotFound();
+        }
+
+        if (!MostrarBotaoRecusar(convidado, dto.Convite, dto.Evento))
+        {
+            return BadRequest();
         }
 
         await service.ConfirmarIndividualAsync(convidadoId, StatusConfirmacao.NaoVai);

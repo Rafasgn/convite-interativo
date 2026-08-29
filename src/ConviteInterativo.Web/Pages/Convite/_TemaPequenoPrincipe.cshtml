@@ -1,19 +1,25 @@
 @model ConviteInterativo.Web.Pages.Convite.IndexModel
 
-@Html.Raw(Model.TemaHtmlAntes)
-
 @{
+    var esconderDados = Model.Convite.ModoConfirmacao == ConviteInterativo.Web.Data.Entities.ModoConfirmacao.Individual
+        ? Model.Convidados.All(c => !ConviteInterativo.Web.Pages.Convite.IndexModel.MostrarDadosEvento(c, Model.Convite, Model.Evento))
+        : !ConviteInterativo.Web.Pages.Convite.IndexModel.MostrarDadosEventoGrupo(Model.Convidados, Model.Convite, Model.Evento);
     var frase = ConviteInterativo.Web.Pages.Convite.IndexModel.FraseConvite(Model.Evento);
 }
-@if (frase is not null)
-{
-    <p class="pp-frase-convite">@Html.Raw(frase.Replace("\n", "<br />"))</p>
-}
 
-@Html.Raw(Model.TemaHtmlMeio)
+<div class="pp-cena-wrapper @(esconderDados ? "pp-esconder-dados" : "")">
+    @Html.Raw(Model.TemaHtmlAntes)
 
-<partial name="_ConfirmacaoConteudo" model="Model" />
+    @if (frase is not null)
+    {
+        <p class="pp-frase-convite">@Html.Raw(frase.Replace("\n", "<br />"))</p>
+    }
 
-@Html.Raw(Model.TemaHtmlDepois)
+    @Html.Raw(Model.TemaHtmlMeio)
+
+    <partial name="_ConfirmacaoConteudo" model="Model" />
+
+    @Html.Raw(Model.TemaHtmlDepois)
+</div>
 
 <script src="~/themes/pequeno-principe/confirmacao-ajax.js" defer></script>
