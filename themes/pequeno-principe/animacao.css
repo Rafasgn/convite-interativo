@@ -141,13 +141,6 @@ body {
   width: 100%;
 }
 
-.pp-asteroide-grupo .pp-principe {
-  position: absolute;
-  width: 55%;
-  top: -35%;
-  left: 22%;
-}
-
 /* ===== z-index 50 — pergaminho ===== */
 .pp-pergaminho-grupo {
   position: absolute;
@@ -226,7 +219,7 @@ body {
   color: #4a2f18;
   text-align: center;
   margin: 0 0 0.5rem;
-  font-size: clamp(0.7rem, 3.2vw, 0.95rem);
+  font-size: clamp(0.6rem, 3.2vw, 0.95rem);
   min-width: 0;
   overflow-wrap: break-word;
   word-break: break-word;
@@ -451,9 +444,11 @@ body {
   }
 
   /* Afrouxa o inset horizontal pra dar mais largura útil ao texto sem invadir
-     a moldura dourada do pergaminho (mantém topo/base intactos). */
+     a moldura dourada do pergaminho (mantém topo/base intactos). Padding
+     extra pra frase de status não encostar na borda depois do wrap. */
   .pp-pergaminho-conteudo {
     inset: 18% 10% 12% 10%;
+    padding: 0 0.3rem;
   }
 
   /* Rede de segurança pra nomes longos ("Roselane Gonçalves") não estourarem
@@ -462,6 +457,17 @@ body {
   .pp-nomes {
     overflow-wrap: break-word;
     word-break: break-word;
+  }
+
+  /* Balão de fala — reduz o quanto sangra pra fora da cena à esquerda no
+     mobile (desktop mantém -15%, valor original). */
+  .pp-balao-grupo {
+    left: -8%;
+  }
+
+  .pp-balao-texto {
+    left: 8%;
+    right: 8%;
   }
 }
 
@@ -578,7 +584,7 @@ body {
   bottom: 30%;
   margin: 0;
   font-family: Georgia, 'Times New Roman', serif;
-  font-size: 0.7rem;
+  font-size: clamp(0.52rem, 2.3vw, 0.7rem);
   font-weight: 600;
   color: #4a2f18;
   text-align: center;
@@ -623,7 +629,7 @@ body {
 
 .pp-status-inline {
   font-family: Georgia, 'Times New Roman', serif;
-  font-size: clamp(0.59rem, 2.7vw, 0.8rem);
+  font-size: clamp(0.5rem, 2.7vw, 0.8rem);
   font-style: italic;
   color: #4a2f18;
   margin: 0 0 0.35rem;
