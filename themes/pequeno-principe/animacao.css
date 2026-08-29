@@ -227,6 +227,9 @@ body {
   text-align: center;
   margin: 0 0 0.5rem;
   font-size: clamp(0.7rem, 3.2vw, 0.95rem);
+  min-width: 0;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .pp-nomes {
@@ -264,6 +267,7 @@ body {
   align-items: center;
   gap: 0.4rem;
   margin: 0.25rem 0;
+  min-width: 0;
 }
 
 .pp-dado a {
@@ -271,14 +275,25 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
+  min-width: 0;
+}
+
+/* Texto do dado (não o ícone) — precisa de min-width:0 pra poder encolher
+   abaixo do min-content dentro do flex .pp-dado e quebrar linha em vez de
+   estourar a borda do pergaminho. */
+.pp-dado span:not(.pp-icone) {
+  min-width: 0;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 /* Sprite sheet 32_icones.png — background-position placeholder.
    TODO: calibrar coordenadas dos ícones do sprite sheet. */
 .pp-icone {
   display: inline-block;
-  width: 24px;
-  height: 24px;
+  width: clamp(16px, 4.5vw, 24px);
+  height: clamp(16px, 4.5vw, 24px);
+  flex-shrink: 0;
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
@@ -442,8 +457,8 @@ body {
   }
 
   /* Rede de segurança pra nomes longos ("Roselane Gonçalves") não estourarem
-     mesmo com a fonte já escalada via clamp(). */
-  .pp-frase-convite,
+     mesmo com a fonte já escalada via clamp(). .pp-frase-convite já tem o
+     mesmo tratamento aplicado incondicionalmente na sua declaração base. */
   .pp-nomes {
     overflow-wrap: break-word;
     word-break: break-word;
@@ -613,4 +628,7 @@ body {
   color: #4a2f18;
   margin: 0 0 0.35rem;
   text-align: center;
+  min-width: 0;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
