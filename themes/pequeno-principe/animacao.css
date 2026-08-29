@@ -248,6 +248,7 @@ body {
   transform: translateY(10px);
   transition: opacity 0.8s ease, transform 0.8s ease;
   font-size: clamp(0.63rem, 2.9vw, 0.85rem);
+  text-align: left;
 }
 
 .pp-cena.fase-dados .pp-dados-evento {
