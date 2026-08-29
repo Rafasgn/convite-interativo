@@ -403,12 +403,20 @@ body {
   .pp-asteroide-grupo,
   .pp-principe-perg,
   .pp-raposa-perg,
-  .pp-pergaminho-grupo,
   .pp-dados-evento,
   .pp-confirmacao,
   .pp-balao-grupo {
     opacity: 1 !important;
     transform: none !important;
+    pointer-events: auto !important;
+  }
+
+  /* .pp-pergaminho-grupo fica de fora da regra genérica acima porque depende
+     de translate(-50%, -50%) pra ficar centralizado (left:50% sozinho não
+     centraliza) — transform:none jogaria ele ~50% pra fora da tela. */
+  .pp-pergaminho-grupo {
+    opacity: 1 !important;
+    transform: translate(-50%, -50%) scale(1) !important;
     pointer-events: auto !important;
   }
 
