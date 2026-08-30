@@ -6,6 +6,7 @@ public class Evento
     public required string Nome { get; set; }
     public required string Slug { get; set; }
     public DateTime DataHora { get; set; }
+    public int DiasConfirmacao { get; set; }
     public required string Endereco { get; set; }
     public string? LinkMapa { get; set; }
     public required string TemaSlug { get; set; }

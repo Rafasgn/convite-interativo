@@ -5,11 +5,12 @@ namespace ConviteInterativo.Tests;
 
 public class IndexModelTests
 {
-    private static Evento CriarEvento(DateTime dataHora) => new()
+    private static Evento CriarEvento(DateTime dataHora, int diasConfirmacao = 15) => new()
     {
         Nome = "Festa",
         Slug = "festa",
         DataHora = dataHora,
+        DiasConfirmacao = diasConfirmacao,
         Endereco = "Rua Teste, 123",
         TemaSlug = "pequeno-principe",
         EmailAnfitrioes = "anfitrioes@example.com",
@@ -28,44 +29,63 @@ public class IndexModelTests
         Status = status,
     };
 
+    // HU-15 — evento 24/10, DiasConfirmacao=15 → prazoNormalData=09/10, gatilhoTardio=02/10.
+    // Tabela de referência validada com o usuário; cada linha é uma fronteira da regra.
     [Fact]
-    public void EhConviteTardio_criado_antes_de_10_dias_retorna_false()
+    public void PrazoLimite_criado_01_10_normal_retorna_09_10_23_59_59()
     {
-        var evento = CriarEvento(new DateTime(2026, 10, 24));
-        var convite = CriarConvite(new DateTime(2026, 10, 14));
+        var evento = CriarEvento(new DateTime(2026, 10, 24), diasConfirmacao: 15);
+        var convite = CriarConvite(new DateTime(2026, 10, 1));
+
+        var prazo = IndexModel.PrazoLimite(convite, evento);
 
         Assert.False(IndexModel.EhConviteTardio(convite, evento));
+        Assert.Equal(new DateTime(2026, 10, 9, 23, 59, 59), prazo);
     }
 
     [Fact]
-    public void EhConviteTardio_criado_dentro_de_10_dias_retorna_true()
+    public void PrazoLimite_criado_02_10_tardio_diasAteEvento_22_retorna_19_10_23_59_59()
     {
-        var evento = CriarEvento(new DateTime(2026, 10, 24));
-        var convite = CriarConvite(new DateTime(2026, 10, 16));
+        var evento = CriarEvento(new DateTime(2026, 10, 24), diasConfirmacao: 15);
+        var convite = CriarConvite(new DateTime(2026, 10, 2));
+
+        var prazo = IndexModel.PrazoLimite(convite, evento);
 
         Assert.True(IndexModel.EhConviteTardio(convite, evento));
+        Assert.Equal(new DateTime(2026, 10, 19, 23, 59, 59), prazo);
     }
 
     [Fact]
-    public void PrazoLimite_antecipado_evento_24_10_retorna_14_10_23_59_59()
+    public void PrazoLimite_criado_17_10_tardio_diasAteEvento_exatamente_7_retorna_19_10_23_59_59()
     {
-        var evento = CriarEvento(new DateTime(2026, 10, 24));
-        var convite = CriarConvite(new DateTime(2026, 10, 14));
+        var evento = CriarEvento(new DateTime(2026, 10, 24), diasConfirmacao: 15);
+        var convite = CriarConvite(new DateTime(2026, 10, 17));
 
         var prazo = IndexModel.PrazoLimite(convite, evento);
 
-        Assert.Equal(new DateTime(2026, 10, 14, 23, 59, 59), prazo);
+        Assert.Equal(new DateTime(2026, 10, 19, 23, 59, 59), prazo);
     }
 
     [Fact]
-    public void PrazoLimite_tardio_evento_24_10_retorna_22_10_23_59_59()
+    public void PrazoLimite_criado_18_10_tardio_diasAteEvento_6_retorna_23_10_23_59_59()
     {
-        var evento = CriarEvento(new DateTime(2026, 10, 24));
-        var convite = CriarConvite(new DateTime(2026, 10, 16));
+        var evento = CriarEvento(new DateTime(2026, 10, 24), diasConfirmacao: 15);
+        var convite = CriarConvite(new DateTime(2026, 10, 18));
 
         var prazo = IndexModel.PrazoLimite(convite, evento);
 
-        Assert.Equal(new DateTime(2026, 10, 22, 23, 59, 59), prazo);
+        Assert.Equal(new DateTime(2026, 10, 23, 23, 59, 59), prazo);
+    }
+
+    [Fact]
+    public void PrazoLimite_criado_23_10_tardio_retorna_23_10_23_59_59()
+    {
+        var evento = CriarEvento(new DateTime(2026, 10, 24), diasConfirmacao: 15);
+        var convite = CriarConvite(new DateTime(2026, 10, 23));
+
+        var prazo = IndexModel.PrazoLimite(convite, evento);
+
+        Assert.Equal(new DateTime(2026, 10, 23, 23, 59, 59), prazo);
     }
 
     [Fact]
@@ -89,13 +109,13 @@ public class IndexModelTests
     [Fact]
     public void StatusExibicaoIndividual_sem_resposta_pre_prazo_mostra_data()
     {
-        var evento = CriarEvento(new DateTime(2026, 10, 24));
-        var convite = CriarConvite(new DateTime(2026, 10, 14));
+        var evento = CriarEvento(new DateTime(2026, 10, 24), diasConfirmacao: 15);
+        var convite = CriarConvite(new DateTime(2026, 10, 1));
         var convidado = CriarConvidado(StatusConfirmacao.SemResposta);
 
         var status = IndexModel.StatusExibicaoIndividual(convidado, convite, evento);
 
-        Assert.Equal("Confirme se poderá comparecer até 14 de outubro", status);
+        Assert.Equal("Confirme se poderá comparecer até 09 de outubro", status);
     }
 
     [Fact]

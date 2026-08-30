@@ -14,7 +14,12 @@ public class EventoInputModel
     public string Slug { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Informe a data e hora do evento.")]
-    public DateTime DataHora { get; set; } = DateTime.Now.AddDays(1);
+    public DateTime DataHora { get; set; } = DateTime.Now.Date.AddDays(1).AddHours(19);
+
+    [Required(ErrorMessage = "Informe o limite de dias para confirmação.")]
+    [Range(1, 90, ErrorMessage = "Informe um valor entre 1 e 90 dias.")]
+    [Display(Name = "Limite de Dias para confirmação")]
+    public int DiasConfirmacao { get; set; } = 15;
 
     [Required(ErrorMessage = "Informe o endereço.")]
     public string Endereco { get; set; } = string.Empty;

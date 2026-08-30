@@ -11,10 +11,6 @@
 <input asp-for="Anfitrioes" placeholder='Ex: "Rafael e Ana Carolina". Opcional.' />
 <span asp-validation-for="Anfitrioes" class="field-validation-error"></span>
 
-<label asp-for="EmailAnfitrioes"></label>
-<input asp-for="EmailAnfitrioes" type="email" placeholder="Email que receberá as notificações de RSVP" />
-<span asp-validation-for="EmailAnfitrioes" class="field-validation-error"></span>
-
 <label asp-for="Homenageado"></label>
 <input asp-for="Homenageado" placeholder='Ex: "Zayan". Opcional. Só aparece na frase se Anfitriões também estiver preenchido.' />
 <span asp-validation-for="Homenageado" class="field-validation-error"></span>
@@ -24,8 +20,12 @@
 <span asp-validation-for="Slug" class="field-validation-error"></span>
 
 <label asp-for="DataHora">Data/Hora</label>
-<input asp-for="DataHora" type="datetime-local" />
+<input asp-for="DataHora" type="datetime-local" step="60" />
 <span asp-validation-for="DataHora" class="field-validation-error"></span>
+
+<label asp-for="DiasConfirmacao">Limite de Dias para confirmação</label>
+<input asp-for="DiasConfirmacao" type="number" min="1" max="90" />
+<span asp-validation-for="DiasConfirmacao" class="field-validation-error"></span>
 
 <label asp-for="Endereco">Endereço</label>
 <input asp-for="Endereco" />

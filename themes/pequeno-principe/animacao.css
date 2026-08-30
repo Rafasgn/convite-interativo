@@ -646,3 +646,9 @@ body {
   overflow-wrap: break-word;
   word-break: break-word;
 }
+
+.pp-cena.fase-confirmacao .pp-skip {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}

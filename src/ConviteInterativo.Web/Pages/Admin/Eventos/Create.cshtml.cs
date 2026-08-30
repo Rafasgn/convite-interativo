@@ -40,6 +40,7 @@ public class CreateModel(AppDbContext db) : PageModel
             Nome = Input.Nome,
             Slug = Input.Slug,
             DataHora = Input.DataHora,
+            DiasConfirmacao = Input.DiasConfirmacao,
             Endereco = Input.Endereco,
             LinkMapa = Input.LinkMapa,
             TemaSlug = Input.TemaSlug,

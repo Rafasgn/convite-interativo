@@ -20,8 +20,9 @@ public class IndexModel(
 
     private static readonly CultureInfo CulturaPtBr = new("pt-BR");
 
-    private const int DiasAntesEventoAntecipado = 10;
-    private const int DiasAntesEventoTardio = 2;
+    private const int DiasGatilhoTardio = 7;
+    private const int DiasAntesEventoTardioLongo = 5;
+    private const int DiasAntesEventoTardioCurto = 1;
 
     public Evento Evento { get; set; } = null!;
     public Data.Entities.Convite Convite { get; set; } = null!;
@@ -47,20 +48,41 @@ public class IndexModel(
                 ? $"{evento.Anfitrioes} convidam"
                 : $"{evento.Anfitrioes} convidam para\n{evento.Nome}";
 
+    // prazoNormalData = DataHora - evento.DiasConfirmacao (o prazo "de vitrine", configurado no evento).
+    // gatilhoTardio = prazoNormalData - 7 dias: convite criado a partir daqui já não tem os
+    // DiasConfirmacao inteiros de folga, então cai no regime tardio (HU-15).
+    private static (DateTime prazoNormalData, DateTime gatilhoTardio) CalcularLimiares(Evento evento)
+    {
+        var prazoNormalData = evento.DataHora.Date.AddDays(-evento.DiasConfirmacao);
+        return (prazoNormalData, prazoNormalData.AddDays(-DiasGatilhoTardio));
+    }
+
     public static bool EhConviteTardio(Data.Entities.Convite convite, Evento evento)
     {
-        var limiteAntecipado = evento.DataHora.Date.AddDays(-DiasAntesEventoAntecipado);
-        return convite.DataCriacao.Date > limiteAntecipado;
+        var (_, gatilhoTardio) = CalcularLimiares(evento);
+        return convite.DataCriacao.Date >= gatilhoTardio;
     }
 
     public static DateTime PrazoLimite(Data.Entities.Convite convite, Evento evento)
     {
-        var diasAntes = EhConviteTardio(convite, evento)
-            ? DiasAntesEventoTardio
-            : DiasAntesEventoAntecipado;
+        var (prazoNormalData, gatilhoTardio) = CalcularLimiares(evento);
+        var criacao = convite.DataCriacao.Date;
 
-        // AddDays(1).AddSeconds(-1) empurra pra 23:59:59 do dia N-antes
-        return evento.DataHora.Date.AddDays(-diasAntes).AddDays(1).AddSeconds(-1);
+        DateTime limiteData;
+        if (criacao < gatilhoTardio)
+        {
+            limiteData = prazoNormalData;
+        }
+        else
+        {
+            var diasAteEvento = (evento.DataHora.Date - criacao).Days;
+            limiteData = diasAteEvento >= DiasGatilhoTardio
+                ? evento.DataHora.Date.AddDays(-DiasAntesEventoTardioLongo)
+                : evento.DataHora.Date.AddDays(-DiasAntesEventoTardioCurto);
+        }
+
+        // AddDays(1).AddSeconds(-1) empurra pra 23:59:59 do dia calculado
+        return limiteData.AddDays(1).AddSeconds(-1);
     }
 
     public static string PrazoLimiteFormatado(Data.Entities.Convite convite, Evento evento) =>

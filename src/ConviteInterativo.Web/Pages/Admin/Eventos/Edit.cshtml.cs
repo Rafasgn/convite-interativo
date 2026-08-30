@@ -27,6 +27,7 @@ public class EditModel(AppDbContext db) : PageModel
             Nome = evento.Nome,
             Slug = evento.Slug,
             DataHora = evento.DataHora,
+            DiasConfirmacao = evento.DiasConfirmacao,
             Endereco = evento.Endereco,
             LinkMapa = evento.LinkMapa,
             TemaSlug = evento.TemaSlug,
@@ -66,6 +67,7 @@ public class EditModel(AppDbContext db) : PageModel
         evento.Nome = Input.Nome;
         evento.Slug = Input.Slug;
         evento.DataHora = Input.DataHora;
+        evento.DiasConfirmacao = Input.DiasConfirmacao;
         evento.Endereco = Input.Endereco;
         evento.LinkMapa = Input.LinkMapa;
         evento.TemaSlug = Input.TemaSlug;
