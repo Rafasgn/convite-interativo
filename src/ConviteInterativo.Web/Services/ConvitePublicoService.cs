@@ -24,7 +24,7 @@ public class ConvitePublicoService(AppDbContext db)
 
         var convidados = await db.Convidados
             .Where(c => c.ConviteId == convite.Id)
-            .OrderBy(c => c.Nome)
+            .OrderBy(c => c.Id)
             .ThenBy(c => c.Sobrenome)
             .ToListAsync();
 

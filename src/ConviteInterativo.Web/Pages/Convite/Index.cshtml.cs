@@ -38,7 +38,7 @@ public class IndexModel(
 
     public static string NomeExibicao(Convidado convidado, string nomeConvite) =>
         string.IsNullOrWhiteSpace(convidado.Sobrenome)
-            ? $"{convidado.Nome} ({nomeConvite})"
+            ? $"{convidado.Nome}"
             : $"{convidado.Nome} {convidado.Sobrenome}";
 
     public static string? FraseConvite(Evento evento) =>
