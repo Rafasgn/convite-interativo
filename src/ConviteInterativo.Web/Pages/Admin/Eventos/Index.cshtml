@@ -21,6 +21,7 @@ else
                 <th>Slug</th>
                 <th>Data/Hora</th>
                 <th>Convites</th>
+                <th>Confirmados</th>
                 <th></th>
             </tr>
         </thead>
@@ -33,6 +34,11 @@ else
                     <td>@evento.DataHora.ToString("dd/MM/yyyy HH:mm")</td>
                     <td>
                         <a asp-page="./Convites/Index" asp-route-eventoId="@evento.Id">Ver convites</a>
+                    </td>
+                    <td>
+                        @(Model.ConfirmadosPorEvento.GetValueOrDefault(evento.Id)) confirmado(s)
+                        <a asp-page-handler="Pdf" asp-route-eventoId="@evento.Id" target="_blank">Ver PDF</a>
+                        <a asp-page-handler="Pdf" asp-route-eventoId="@evento.Id" asp-route-download="true">Baixar PDF</a>
                     </td>
                     <td>
                         <a asp-page="Edit" asp-route-id="@evento.Id">Editar</a>
